@@ -1,9 +1,9 @@
-public class name {
+public class Name {
   public static void main(String[] args) {
-    new name();
+    new Name();
   }
 
-  public name() {
+  public Name() {
     System.out.println("    ::::::::: :::   :::  :::    ::::    ::: ");
     System.out.println("   :+:    :+::+:   :+::+: :+:  :+:+:   :+:  ");
     System.out.println("  +:+    +:+ +:+ +:++:+   +:+ :+:+:+  +:+   ");

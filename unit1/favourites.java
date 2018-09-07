@@ -1,4 +1,4 @@
-public class favourites {
+public class Favourites {
   public static void main(String[] args) {
     String[] answers = new String[]{
       "My name is Ryan Nguyen.",
