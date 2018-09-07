@@ -5,27 +5,22 @@ public class MillieMuffins2 {
     int[][] ranges = new int[][]{
       {1, 9, 5},
       {10, 19, 3},
-      {20, 39, 2}
-      // It's not very nice as it doesn't support intervals to +-infinity
+      {20, 39, 2},
+      {40, Integer.MAX_VALUE, 1}
+      // This is basically the closest I get to an interval with endpoint infinity
     };
     int muffinCount = IBIO.inputInt("How many muffins would you like? ");
     // We give it a value so the compiler doesn't throw a fit.
-    // A more experienced would write code so this wouldn't be necessary.
     int costPerMuffin = 0;
 
-    // This awkward ift is the result of not having intervals to +- infinity
-    if (muffinCount >= 40) {
-      costPerMuffin = 1;
-    } else {
-      for (int i = 0; i < ranges.length; i++) {
-        int[] range = ranges[i];
-        if (muffinCount >= range[0] && muffinCount <= range[1]) {
-          costPerMuffin = range[2];
-          // In our case, we only break for efficiency.
-          // There's no reason to run through the rest of the ranges
-          // if we've already found costPerMuffin.
-          break;
-        }
+    for (int i = 0; i < ranges.length; i++) {
+      int[] range = ranges[i];
+      if (muffinCount >= range[0] && muffinCount <= range[1]) {
+        costPerMuffin = range[2];
+        // In our case, we only break for efficiency.
+        // There's no reason to run through the rest of the
+        // ranges if we've already found costPerMuffin.
+        break;
       }
     }
 
