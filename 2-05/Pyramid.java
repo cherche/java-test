@@ -1,6 +1,7 @@
 public class Pyramid {
   public static void main(String[] args) {
-    Map map = new Map(4);
+    int height = IBIO.inputInt("What is the height of the pyramid? ");
+    Map map = new Map(height);
 
     // The Map class just gives us a 2D array of booleans
     // Here, we get to decide what to do with these booleans
