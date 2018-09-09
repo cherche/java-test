@@ -20,14 +20,10 @@ public class RPS {
     this.length = choices.length;
   }
 
+  // We do it this way since we don't want people messing
+  // with the class variables
   public String getName(int i) {
     return choices[i];
-  }
-
-  // Probably used for generating computer choice
-  public String getRandomName() {
-    int i = Chance.getRandomInt(0, length);
-    return getName(i);
   }
 
   // In a way, this method is more like getNotLoser()
