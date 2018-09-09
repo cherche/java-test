@@ -1,12 +1,12 @@
 public class Cards {
   public static void main(String[] args) {
-    String[] suits = new String[]{
+    String[] suits = new String[] {
       "Hearts",
       "Diamonds",
       "Spades",
       "Clubs"
     };
-    String[] ranks = new String[]{
+    String[] ranks = new String[] {
       "Ace",
       "1",
       "2",

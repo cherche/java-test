@@ -1,6 +1,6 @@
 public class WordFunnel {
   public static void main(String[] args) {
-    String[][] testPairs = new String[][]{
+    String[][] testPairs = new String[][] {
       {"leave", "eave"},
       {"reset", "rest"},
       {"dragoon", "dragon"},
@@ -26,8 +26,7 @@ public class WordFunnel {
     }
 
     for (int i = 0; i < supLen; i++) {
-      String subCandidate = sup.substring(0, i)
-        + sup.substring(i + 1);
+      String subCandidate = sup.substring(0, i) + sup.substring(i + 1);
 
       if (subCandidate.equals(sub)) {
         return true;

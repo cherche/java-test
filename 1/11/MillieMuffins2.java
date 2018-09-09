@@ -2,7 +2,7 @@ public class MillieMuffins2 {
   public static void main(String[] args) {
     System.out.print("Welcome to Millie's Marvelous Muffins!\n\n**If you like muffins, ours are marvelous!**\n\n");
     // Not super clear but I don't really know how else to store the data
-    int[][] ranges = new int[][]{
+    int[][] ranges = new int[][] {
       {1, 9, 5},
       {10, 19, 3},
       {20, 39, 2},

@@ -1,6 +1,6 @@
 public class Favourites {
   public static void main(String[] args) {
-    String[] answers = new String[]{
+    String[] answers = new String[] {
       "My name is Ryan Nguyen.",
       "My favourite colour is red.",
       "My favourite TV show is Grey's Anatomy.",
