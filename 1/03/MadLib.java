@@ -1,9 +1,9 @@
 public class MadLib {
   private String[] descs;
-  private String[] template;
+  private TempPair[] template;
   private int[] indices;
 
-  public MadLib(String[] descs, String[] template, int[] indices) {
+  public MadLib(String[] descs, TempPair[] template) {
     this.template = template;
     this.indices = indices;
   }
@@ -16,16 +16,14 @@ public class MadLib {
     int i = 0;
     String story = "";
 
-    for (; i < indices.length; i++) {
-      int index = indices[i];
-      story += template[i] + words[index];
-    }
-
-    // If there's more template left over, just print it all out
-    // This just makes the MadLib class easier to use
-    if (template.length > indices.length) {
-      for (; i < template.length; i++) {
-        story += template[i];
+    for (; i < template.length; i++) {
+      String string = template[i].string;
+      int index = template[i].index;
+      if (index == -1) {
+        story += string;
+      } else {
+        String word = words[index];
+        story += string + word;
       }
     }
 
