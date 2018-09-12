@@ -1,13 +1,13 @@
 public class Average {
   public static void main(String[] args) {
     printTitle();
-    int numOfStudents = IBIO.inputInt("How many students are there? ");
+    System.out.println("Enter the percentage earned on each test.");
+    System.out.println("");
     // Technically, the initial value is already 0.0
     // but this is a bit more readable
     double sum = 0.0;
-    System.out.println("");
 
-    for (int i = 0; i < numOfStudents; i++) {
+    for (int i = 0; i < 6; i++) {
       int humanIndex = i + 1;
       String prompt = String.format("What is the mark of student #%d? ", humanIndex);
       int mark = IBIO.inputInt(prompt);
@@ -17,12 +17,12 @@ public class Average {
       sum += mark;
     }
 
-    double average = sum / numOfStudents;
+    double average = sum / 6;
     String message =
-      "There are %d students in the class.\n"
+      "There are six students in the class.\n"
       + "The average mark was %f%%.";
     System.out.println("");
-    System.out.println(String.format(message, numOfStudents, average));
+    System.out.println(String.format(message, average));
   }
 
   private static void printTitle() {
