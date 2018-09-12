@@ -5,7 +5,7 @@ https://creativecommons.org/licenses/by/2.0/ca/
 I have adapted it to collect user input and
 output the resulting story in the command line.
 */
-public class MadLib2 {
+public class MadLib {
   public static void main(String[] args) {
     String[] descs = new String[] {
       "an adjective",
