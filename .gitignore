@@ -1,2 +1,9 @@
 *.class
 *.bash
+
+# BlueJ Project Files
+# Honestly, I don't ever use BlueJ.
+# I guess I'm just future-proofing the
+# repository from myself.
+*.ctxt
+*.bluej
