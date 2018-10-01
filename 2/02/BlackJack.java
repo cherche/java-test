@@ -10,6 +10,7 @@ public class BlackJack {
     deck.deal(dealer, 2);
     int playerTotal = getHandTotal(player);
     int dealerTotal = getHandTotal(dealer);
+    System.out.println(handToString(player));
     System.out.println("Your total: " + playerTotal);
 
     if (playerTotal == 21) {
@@ -25,6 +26,7 @@ public class BlackJack {
       deck.deal(player);
       playerTotal = getHandTotal(player);
       System.out.println("");
+      System.out.println(handToString(player));
       System.out.println("Your total: " + playerTotal);
 
       if (playerTotal > 21) {
@@ -35,12 +37,14 @@ public class BlackJack {
     }
 
     System.out.println("---");
+    System.out.println(handToString(dealer));
     System.out.println("My total: " + dealerTotal);
 
-    while (dealerTotal < 16) {
+    while (dealerTotal < 16 && dealerTotal < playerTotal) {
       deck.deal(dealer);
       dealerTotal = getHandTotal(dealer);
       IBIO.input("Enter anything to continue.\n");
+      System.out.println(handToString(dealer));
       System.out.println("My total: " + dealerTotal);
 
       if (dealerTotal > 21) {
@@ -65,6 +69,18 @@ public class BlackJack {
         + "completely skill-dependent game."
       );
     }
+  }
+
+  private static String handToString(List<Card> hand) {
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < hand.size(); i++) {
+      Card card = hand.get(i);
+      sb.append(card.rank + card.suit);
+      sb.append(" ");
+    }
+
+    return sb.toString();
   }
 
   private static int getHandTotal(List<Card> hand) {
