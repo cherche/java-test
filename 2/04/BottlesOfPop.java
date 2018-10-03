@@ -18,13 +18,13 @@ public class BottlesOfPop {
     } else if (count == 2) {
       diffs[2] = "1 last bottle";
     } else {
-      diffs[2] = (count - 1) + "bottles";
+      diffs[2] = (count - 1) + " bottles";
     }
 
     return diffs[0] + " of pop on the wall.\n"
-    + diffs[0] + " of pop.\n"
-    + "If " + diffs[1] + " should happen to fall...\n"
-    + "There would be " + diffs[2] + " of pop on the wall.\n\n";
+      + diffs[0] + " of pop.\n"
+      + "If " + diffs[1] + " should happen to fall...\n"
+      + "There would be " + diffs[2] + " of pop on the wall.\n\n";
   }
 
   static String pluralize(String noun, int count) {
