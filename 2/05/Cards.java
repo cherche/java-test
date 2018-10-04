@@ -8,7 +8,6 @@ public class Cards {
     };
     String[] ranks = new String[] {
       "Ace",
-      "1",
       "2",
       "3",
       "4",
@@ -17,6 +16,7 @@ public class Cards {
       "7",
       "8",
       "9",
+      "10",
       "Jack",
       "Queen",
       "King"
