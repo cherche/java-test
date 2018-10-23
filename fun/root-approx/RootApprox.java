@@ -1,4 +1,5 @@
 public class RootApprox {
+  private static double EPSILON = 0.000001;
   // Thanks Newton
   private static double x;
 
@@ -17,11 +18,19 @@ public class RootApprox {
     // smaller interval (pi/6, pi/4).
   }
 
+  // This obviously isn't mathematically accurate, but a numerical
+  // approximation of the derivative is good enough for our purposes
+  private static double derivative(double x) {
+    return (function(x + EPSILON) - function(x)) / EPSILON;
+  }
+
+  /*
   private static double derivative(double x) {
     // LaTeX:
     // f'(x) = -cos(x)(frac{3}{2}sin(2x) + 1)
     return -Math.cos(x) * ((3 / 2) * Math.sin(2 * x) + 1);
   }
+  */
 
   public static void main(String[] args) {
     x = IBIO.inputDouble("Initial Guess: ");
