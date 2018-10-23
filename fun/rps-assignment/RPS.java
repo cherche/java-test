@@ -63,7 +63,7 @@ public class RPS {
       // first choice is in the centre.
       int shift = middle - first;
       int shifted1 = first + shift;
-      int shifted2 = (second + shift + choices.length) % choices.length;
+      int shifted2 = Math.floorMod(second + shift, choices.length);
       // Now, if choices is an array of length 2n + 1, the n elements to
       // the left of the first choice (shifted1) are exactly the same
       // elements with indices less than shifted1 since shifted1 is the middle
