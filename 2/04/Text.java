@@ -16,16 +16,17 @@ public class Text {
       {"TTYL", "talk to you later"}
     };
     Map<String, String> lookup = arrayToMap(pairs);
+    String key = "";
 
-    while (true) {
-      String key = IBIO.inputString("Enter phrase> ");
+    do {
+      key = IBIO.inputString("Enter phrase> ");
       String value = lookup.get(key);
       if (value != null) {
         IBIO.output(value);
       } else {
         IBIO.output("I don't know what that means . . .");
       }
-    }
+    } while (!key.equals("TTYL"));
   }
 
   private static Map<String, String> arrayToMap(String[][] pairs) {
