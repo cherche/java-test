@@ -66,8 +66,12 @@ public class Trident {
 
     // Append the "bar" connecting them
     string += repeatString("*", tridentWidth) + "\n";
+    // Basically, we want the trident to look pretty nice
+    // (i.e. symmetrical), so if its width is even, the handle
+    // will be made two asterisks wide
+    String handleBit = (tridentWidth % 2 == 0) ? "**" : "*";
     // Get each row of the handle
-    String centredHandleBit = centre("*", tridentWidth);
+    String centredHandleBit = centre(handleBit, tridentWidth);
 
     // Append the handle
     for (int i = 0; i < handleLength; i++) {
