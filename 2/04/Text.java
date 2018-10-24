@@ -21,10 +21,11 @@ public class Text {
     do {
       key = IBIO.inputString("Enter phrase> ");
       String value = lookup.get(key);
+
       if (value != null) {
         IBIO.output(value);
       } else {
-        IBIO.output("I don't know what that means . . .");
+        IBIO.output(key);
       }
     } while (!key.equals("TTYL"));
   }
