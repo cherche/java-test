@@ -1,28 +1,29 @@
 public class Beetle {
   public static void main(String[] args) {
-    new Beetle();
+    new Beetle(2);
   }
 
-  public Beetle() {
+  public Beetle(int playerCount) {
     printInstructions();
     System.out.println("");
     // Nicely, the elements are initialized to 0 as a result of
     // the language specification itself
-    int[] scores = new int[2];
+    int[] scores = new int[playerCount];
     int winner = 0;
     boolean isWon = false;
 
     while (!isWon) {
       for (int i = 0; i < scores.length; i++) {
         int humanIndex = i + 1;
-        System.out.println("Player " + humanIndex + ":");
-        IBIO.inputString("Press ENTER to continue.");
+        System.out.println("Player " + humanIndex + ": ");
         scores[i] = getNextScore(scores[i]);
         System.out.println("");
+        IBIO.inputString("Press ENTER to continue.");
 
         if (scores[i] == 6) {
           winner = humanIndex;
           isWon = true;
+          break;
         }
       }
     }
@@ -64,21 +65,165 @@ public class Beetle {
     return score;
   }
 
+  // I hate this method more than I hate myself
   public void drawBeetle(int legCount) {
-    String diff = (legCount == 1) ? "leg" : "legs";
-    System.out.println("Wow! " + legCount + " " + diff + ".");
-    /*
-    System.out.println (" \\ / ");
-    System.out.println (" .\\-/. ");
-    System.out.println (" /\\ () () /\\ ");
-    System.out.println (" / \\ /~-~\\ / \\ ");
-    System.out.println (" y Y V ");
-    System.out.println (" ,-^-./ | \\,-^-. ");
-    System.out.println ("/ { | } \\");
-    System.out.println (" \\ | / ");
-    System.out.println (" /\\ A /\\ ");
-    System.out.println (" / \\/ \\/ \\ ");
-    System.out.println (" / \\ ");
-    */
+    switch (legCount) {
+      case 1:
+        System.out.println("        \\   /\n" +
+"        .\\-/.\n" +
+"    /\\  () ()\n" +
+"   /  \\ /~-~\\\n" +
+"       /  Y  \\\n" +
+"      /   |   \\\n" +
+"     {    |    }\n" +
+"      \\   |   /\n" +
+"       \\  A  /\n" +
+"        \\/ \\/");
+        break;
+      case 2:
+        System.out.println("        \\   /" + "\n" +
+"        .\\-/.\n" +
+"    /\\  () ()  /\\\n" +
+"   /  \\ /~-~\\ /  \\\n" +
+"       y  Y  \\\n" +
+"      /   |   \\\n" +
+"     {    |    }\n" +
+"      \\   |   /\n" +
+"       \\  A  /\n" +
+"        \\/ \\/");
+        break;
+      case 3:
+        System.out.println("        \\   /" + "\n" +
+"        .\\-/.\n" +
+"    /\\  () ()  /\\\n" +
+"   /  \\ /~-~\\ /  \\\n" +
+"       y  Y  V\n" +
+" ,-^-./   |   \\\n" +
+"/    {    |    }\n" +
+"      \\   |   /\n" +
+"       \\  A  /\n" +
+"        \\/ \\/");
+        break;
+      case 4:
+        System.out.println("        \\   /" + "\n" +
+"        .\\-/.\n" +
+"    /\\  () ()  /\\\n" +
+"   /  \\ /~-~\\ /  \\\n" +
+"       y  Y  V\n" +
+" ,-^-./   |   \\,-^-.\n" +
+"/    {    |    }    \\\n" +
+"      \\   |   /\n" +
+"       \\  A  /\n" +
+"        \\/ \\/");
+        break;
+      case 5:
+        System.out.println("        \\   /" + "\n" +
+"        .\\-/.\n" +
+"    /\\  () ()  /\\\n" +
+"   /  \\ /~-~\\ /  \\\n" +
+"       y  Y  V\n" +
+" ,-^-./   |   \\,-^-.\n" +
+"/    {    |    }    \\\n" +
+"      \\   |   /\n" +
+"      /\\  A  /\n" +
+"     /  \\/ \\/\n" +
+"    /");
+        break;
+      default:
+        System.out.println("        \\   /" + "\n" +
+"        .\\-/.\n" +
+"    /\\  () ()  /\\\n" +
+"   /  \\ /~-~\\ /  \\\n" +
+"       y  Y  V\n" +
+" ,-^-./   |   \\,-^-.\n" +
+"/    {    |    }    \\\n" +
+"      \\   |   /\n" +
+"      /\\  A  /\\\n" +
+"     /  \\/ \\/  \\\n" +
+"    /           \\");
+    }
+
+/*
+        \   /
+        .\-/.
+        () ()
+        /~-~\
+       /  Y  \
+      /   |   \
+     {    |    }
+      \   |   /
+       \  A  /
+        \/ \/
+
+        \   /
+        .\-/.
+    /\  () ()
+   /  \ /~-~\
+       y  Y  \
+      /   |   \
+     {    |    }
+      \   |   /
+       \  A  /
+        \/ \/
+
+        \   /
+        .\-/.
+    /\  () ()  /\
+   /  \ /~-~\ /  \
+       y  Y  V
+      /   |   \
+     {    |    }
+      \   |   /
+       \  A  /
+        \/ \/
+
+        \   /
+        .\-/.
+    /\  () ()  /\
+   /  \ /~-~\ /  \
+       y  Y  V
+ ,-^-./   |   \
+/    {    |    }
+      \   |   /
+       \  A  /
+        \/ \/
+
+        \   /
+        .\-/.
+    /\  () ()  /\
+   /  \ /~-~\ /  \
+       y  Y  V
+ ,-^-./   |   \,-^-.
+/    {    |    }    \
+      \   |   /
+       \  A  /
+        \/ \/
+
+
+        \   /
+        .\-/.
+    /\  () ()  /\
+   /  \ /~-~\ /  \
+       y  Y  V
+ ,-^-./   |   \,-^-.
+/    {    |    }    \
+      \   |   /
+      /\  A  /
+     /  \/ \/
+    /
+
+        \   /
+        .\-/.
+    /\  () ()  /\
+   /  \ /~-~\ /  \
+       y  Y  V
+ ,-^-./   |   \,-^-.
+/    {    |    }    \
+      \   |   /
+      /\  A  /\
+     /  \/ \/  \
+    /           \
+*/
+
   }
 }
