@@ -4,39 +4,78 @@
  * @version 2018-10-30
  */
 public class Game {
+  private static boolean isWon = false;
+  private static boolean isLost = false;
   // As you may have guessed, the current room
   private static Room currentRoom;
+  // Nothing more than the storage of all information in the game
+  private static Room[] rooms = new Room[] {
+    new Room("Living Room", new Action[] {
+      new Action("Watch TV", new Function() {
+        public void run() {
+          System.out.println("You turned it on but got bored");
+        }
+      }),
+      new Action("Roll a die", new Function() {
+        public void run() {
+          int value = (int) (Math.random() * 6) + 1;
+          System.out.println("You rolled a " + value);
+        }
+      })
+    }),
+    new Room("Kitchen", new Action[] {
+      new Action("Eat", new Function() {
+        public void run() {
+          animatedPrint("You ate food.", 100);
+          System.out.println("");
+          String message;
+
+          if (Math.random() < 0.5) {
+            isWon = true;
+            message = "That was some incredible food.";
+          } else {
+            isLost = true;
+            message = "You don't feel so good . . . it was probably poisonous.";
+          }
+
+          animatedPrint(message, 100);
+          System.out.println("");
+        }
+      })
+    })
+  };
+  private static Person[] people = new Person[] {
+    new Person("Bob", new Action[] {
+      new Action("Talk", new Function() {
+        public void run() {
+          animatedPrint("I really don't like you.", 100);
+          System.out.println("");
+          animatedPrint("DIE!", 400);
+          System.out.println("");
+          isLost = true;
+        }
+      })
+    })
+  };
 
   public static void main(String[] args) {
-    // Nothing more than the storage of all information in the game
-    Room[] rooms = new Room[] {
-      new Room("Living Room", new Action[] {
-        new Action("Watch TV", new Function() {
-          public void run() {
-            System.out.println("You turned it on but got bored");
-          }
-        }),
-        new Action("Roll a die", new Function() {
-          public void run() {
-            int value = (int) (Math.random() * 6) + 1;
-            System.out.println("You rolled a " + value);
-          }
-        })
-      }),
-      new Room("Kitchen", new Action[] {
-        new Action("Eat", new Function() {
-          public void run() {
-            System.out.println("You ate food");
-          }
-        })
-      })
-    };
-    currentRoom = rooms[0];
-    link(rooms, 0, new int[] {1});
+    initGame();
+    rooms[0].people.add(people[0]);
 
-    while (true) {
+    while (!isWon) {
       runRoom(currentRoom);
+
+      if (isLost) {
+        // At the moment, the time loop is not explained to the user
+        // They must discover it themselves
+        System.out.println("");
+        animatedPrint(". . .", 700);
+        System.out.println("");
+        resetGame();
+      }
     }
+
+    System.out.println("You won the game. Congratulations!");
   }
 
   private static void runRoom(Room room) {
@@ -46,7 +85,9 @@ public class Game {
     // That is to say, the game's while loop will
     // just re-open the currentRoom
     boolean hasPeople = room.people.size() > 0;
-    System.out.println("\n# " + room.name.toUpperCase());
+    String roomName = room.name.toUpperCase();
+    System.out.println("\n# " + roomName);
+    System.out.println("Note: Enter an invalid response at any point to escape menus.");
     System.out.println("[0] Move");
     System.out.println("[1] Act");
 
@@ -61,7 +102,7 @@ public class Game {
     int activity = IBIO.inputInt("");
 
     if (activity == 0) {
-      System.out.println("\n## Move");
+      System.out.println("\n# " + roomName + " : Move");
       Room[] links = room.links.toArray(new Room[0]);
 
       for (int i = 0; i < links.length; i++) {
@@ -74,10 +115,10 @@ public class Game {
       try {
         currentRoom = links[linkIndex];
       } catch (Exception e) {
-        System.out.println("That is not a valid choice.");
+
       }
     } else if (activity == 1) {
-      System.out.println("\n## Act");
+      System.out.println("\n# " + roomName + " : Act");
       Action[] actions = room.actions;
 
       for (int i = 0; i < actions.length; i++) {
@@ -91,10 +132,10 @@ public class Game {
         Action action = actions[actionIndex];
         action.run();
       } catch (Exception e) {
-        System.out.println("That is not a valid choice.");
+
       }
     } else if (activity == 2 && hasPeople) {
-      System.out.println("\n## Interact");
+      System.out.println("\n# " + roomName + " : Interact");
       Person[] people = room.people.toArray(new Person[0]);
 
       for (int i = 0; i < people.length; i++) {
@@ -106,6 +147,7 @@ public class Game {
 
       try {
         Person person = people[personIndex];
+        System.out.println("\n# " + roomName + " : Interact : " + person.name);
         Action[] actions = person.actions;
 
         for (int i = 0; i < actions.length; i++) {
@@ -119,13 +161,33 @@ public class Game {
           Action action = actions[actionIndex];
           action.run();
         } catch (Exception e) {
-          System.out.println("That is not a valid choice.");
+
         }
       } catch (Exception e) {
-        System.out.println("That is not a valid choice.");
+
       }
-    } else {
-      System.out.println("That is not a valid choice.");
+    }
+  }
+
+  private static void resetGame() {
+    currentRoom = rooms[0];
+    isLost = false;
+  }
+
+  private static void initGame() {
+    // Link all the rooms together
+    link(rooms, 0, new int[] {1});
+    resetGame();
+  }
+
+  private static void animatedPrint(String string, int delay) {
+    for (int i = 0; i < string.length(); i++) {
+      try {
+        System.out.print(string.charAt(i));
+        Thread.sleep(delay);
+      } catch (Exception e) {
+
+      }
     }
   }
 

@@ -88,7 +88,10 @@ public class IBIO {
     try {
       result = Integer.valueOf(input(prompt).trim()).intValue();
     } catch (Exception e) {
-      result = 0;
+      // This is the code that will usually come with the IBIO class
+      // result = 0;
+      // I'm replacing it to fit my purposes
+      result = -1;
     }
 
     return result;
