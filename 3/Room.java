@@ -6,18 +6,21 @@ import java.util.*;
  * @version 2018-10-30
  */
 public class Room {
-  // public Collection<Person> people = new Collection<Person>();
   public String name;
   public Action[] actions;
   public Set<Room> links = new HashSet<Room>();
-
-  public Room(String name, Action[] actions, Set<Room> links) {
-    this.actions = actions;
-    this.links = links;
-  }
+  public Set<Person> people = new HashSet<Person>();
 
   public Room(String name, Action[] actions) {
     this.name = name;
     this.actions = actions;
   }
+
+  /*
+  public Room(String name, Action[] actions, Set<Room> links) {
+    this.name = name;
+    this.actions = actions;
+    this.links = links;
+  }
+  */
 }

@@ -4,14 +4,17 @@
  * @version 2018-10-30
  */
 public class Action {
-  public String desc;
+  public String name;
   public Function fn;
 
-  public Action(String desc, Function fn) {
-    this.desc = desc;
+  public Action(String name, Function fn) {
+    this.name = name;
     this.fn = fn;
   }
 
+  /**
+   * Runs the contained method
+   */
   public void run() {
     this.fn.run();
   }
