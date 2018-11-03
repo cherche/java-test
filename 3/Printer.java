@@ -30,7 +30,10 @@ public class Printer {
 
       wait(delay);
     }
+  }
 
+  public void dialogueln(String string) {
+    dialogue(string);
     System.out.println("");
   }
 
