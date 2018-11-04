@@ -37,11 +37,15 @@ public class Printer {
     System.out.println("");
   }
 
+  public void dialogueChain(String string) {
+    dialogue(string);
+    // It's nice that IBIO.input() will add a new line for us
+    IBIO.input("");
+  }
+
   public void dialogueChain(String[] strings) {
     for (int i = 0; i < strings.length; i++) {
-      dialogue(strings[i]);
-      // It's nice that IBIO.input() will add a new line for us
-      IBIO.input("");
+      dialogueChain(strings[i]);
     }
   }
 
