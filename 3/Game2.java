@@ -1,33 +1,38 @@
+import java.util.*;
+
 /**
  * Contains everything needed to actually run the game
  * @author Ryan Nguyen
  * @version 2018-10-30
  */
-public class Game {
+public class Game2 {
+  private static Printer printer = getPrinter();
   private static boolean isWon = false;
   private static boolean isLost = false;
+  // Although we currently just store a move count,
+  // it would be more appropriate to use time
+  // as the story relies so heavily on it
+  private static int moveCount = 0;
   // As you may have guessed, the current room
   private static Room currentRoom;
   // Nothing more than the storage of all information in the game
   private static Room[] rooms = new Room[] {
-    new Room("Living Room", new Action[] {
-      new Action("Watch TV", new Function() {
+    new Room("Place", new Action[] {
+      new Action("Talk to self", new Function() {
         public void run() {
-          System.out.println("You turned it on but got bored");
+          printer.dialogueln("Message.");
         }
       }),
       new Action("Roll a die", new Function() {
         public void run() {
           int value = (int) (Math.random() * 6) + 1;
-          System.out.println("You rolled a " + value);
+          printer.dialogueln("You rolled a " + value + ".");
         }
       })
     }),
     new Room("Kitchen", new Action[] {
       new Action("Eat", new Function() {
         public void run() {
-          animatedPrint("You ate food.", 100);
-          System.out.println("");
           String message;
 
           if (Math.random() < 0.5) {
@@ -38,44 +43,106 @@ public class Game {
             message = "You don't feel so good . . . it was probably poisonous.";
           }
 
-          animatedPrint(message, 100);
-          System.out.println("");
+          printer.dialogueln("You ate food.\n" + message);
         }
       })
     })
   };
   private static Person[] people = new Person[] {
-    new Person("Bob", new Action[] {
+    new Person("Alice", new Action[] {
       new Action("Talk", new Function() {
         public void run() {
-          animatedPrint("I really don't like you.", 100);
-          System.out.println("");
-          animatedPrint("DIE!", 400);
-          System.out.println("");
+          printer.dialogueln("\"You lose the game\"");
           isLost = true;
+        }
+      })
+    }),
+    new Person("Bob", new Action[] {
+      new Action("Eat", new Function() {
+        public void run() {
+          printer.dialogueln("That is cannibalism.\nBut I guess I'll give you the win.");
+          isWon = true;
         }
       })
     })
   };
 
   public static void main(String[] args) {
+    System.out.println("Note: Enter an invalid response at any point to escape menus.");
     initGame();
-    rooms[0].people.add(people[0]);
 
     while (!isWon) {
+      // Just for debugging
+      // System.out.println("Move count: " + moveCount);
       runRoom(currentRoom);
 
       if (isLost) {
         // At the moment, the time loop is not explained to the user
         // They must discover it themselves
-        System.out.println("");
-        animatedPrint(". . .", 700);
-        System.out.println("");
+        printer.dialogueChain(". . .");
         resetGame();
       }
     }
 
-    System.out.println("You won the game. Congratulations!");
+    printer.dialogueln("You won the game. Congratulations!");
+  }
+
+  private static void resetGame() {
+    isLost = false;
+    moveCount = 0;
+    currentRoom = rooms[0];
+  }
+
+  private static void initGame() {
+    // Link all the rooms together
+    link(rooms, 0, new int[] {1});
+    // Add all of the people to their respective rooms
+    movePerson(people[0], 0);
+    movePerson(people[1], 1);
+    // Call resetGame()
+    resetGame();
+  }
+
+  private static String sanitize(String string) {
+    return string
+      .toLowerCase()
+      .replaceAll("[^0-9a-z ]+", "")
+      .trim()
+      .replaceAll("\\s+", " ");
+  }
+
+  private static void link(Room[] rooms, int centralNode, int[] linkedNodes) {
+    Room centralRoom = rooms[centralNode];
+
+    for (int i = 0; i < linkedNodes.length; i++) {
+      int linkedNode = linkedNodes[i];
+      Room linkedRoom = rooms[linkedNode];
+      centralRoom.links.add(linkedRoom);
+      linkedRoom.links.add(centralRoom);
+    }
+  }
+
+  private static void movePerson(Person person, int dest) {
+    // This is pretty inefficient
+    // Ideally, since a person is expected to be in only one room at a time,
+    // this method would know where they are and remove them
+    for (int i = 0; i < rooms.length; i++) {
+      Room room = rooms[0];
+      room.people.remove(person);
+    }
+
+    rooms[dest].people.add(person);
+  }
+
+  private static Printer getPrinter() {
+    Map<Character, Integer> delays = new HashMap<Character, Integer>();
+    delays.put(',', 150);
+    delays.put(';', 200);
+    delays.put('.', 200);
+    delays.put('?', 200);
+    delays.put('!', 200);
+    delays.put('\n', 250);
+    return new Printer(75, delays);
   }
 
   private static void runRoom(Room room) {
@@ -87,7 +154,6 @@ public class Game {
     boolean hasPeople = room.people.size() > 0;
     String roomName = room.name.toUpperCase();
     System.out.println("\n# " + roomName);
-    System.out.println("Note: Enter an invalid response at any point to escape menus.");
     System.out.println("[0] Move");
     System.out.println("[1] Act");
 
@@ -115,7 +181,7 @@ public class Game {
       try {
         currentRoom = links[linkIndex];
       } catch (Exception e) {
-
+        return;
       }
     } else if (activity == 1) {
       System.out.println("\n# " + roomName + " : Act");
@@ -132,7 +198,7 @@ public class Game {
         Action action = actions[actionIndex];
         action.run();
       } catch (Exception e) {
-
+        return;
       }
     } else if (activity == 2 && hasPeople) {
       System.out.println("\n# " + roomName + " : Interact");
@@ -161,52 +227,17 @@ public class Game {
           Action action = actions[actionIndex];
           action.run();
         } catch (Exception e) {
-
+          return;
         }
       } catch (Exception e) {
-
+        return;
       }
+    } else {
+      return;
     }
-  }
 
-  private static void resetGame() {
-    currentRoom = rooms[0];
-    isLost = false;
-  }
-
-  private static void initGame() {
-    // Link all the rooms together
-    link(rooms, 0, new int[] {1});
-    resetGame();
-  }
-
-  private static void animatedPrint(String string, int delay) {
-    for (int i = 0; i < string.length(); i++) {
-      try {
-        System.out.print(string.charAt(i));
-        Thread.sleep(delay);
-      } catch (Exception e) {
-
-      }
-    }
-  }
-
-  private static String sanitize(String string) {
-    return string
-      .toLowerCase()
-      .replaceAll("[^0-9a-z ]+", "")
-      .trim()
-      .replaceAll("\\s+", " ");
-  }
-
-  private static void link(Room[] rooms, int centralNode, int[] linkedNodes) {
-    Room centralRoom = rooms[centralNode];
-
-    for (int i = 0; i < linkedNodes.length; i++) {
-      int linkedNode = linkedNodes[i];
-      Room linkedRoom = rooms[linkedNode];
-      centralRoom.links.add(linkedRoom);
-      linkedRoom.links.add(centralRoom);
-    }
+    // And finally, if we got through all of that with no errors
+    // (and therefore no returning):
+    moveCount++;
   }
 }
