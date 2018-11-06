@@ -1,24 +1,18 @@
 import java.util.*;
 
 /*
- 0 Hallway (1)
- 1 Foyer
- 2 Powder Room
- 3 Closet
- 4 Living Room
- 5 Kitchen
- 6 Laundry Room
+ 0 Living Room
+ 1 Bathroom
+ 2 Kitchen
+ 3 Laundry Room
+ 4 Christina's Room
+ 5 Lucia's Room
+ 6 Veronica's Room
  7 Workshop
- 8 Hallway (2)
- 9 Christina's Room
-10 Closet
-11 Bathroom
-12 Veronica's Room
-13 Closet
-14 Lucia's Room
-15 Closet
-16 Family Room
-17 Bathroom
+ 8 Christina's Bathroom
+ 9 Christina's Closet
+10 Lucia's Closet
+11 Veronica's Closet
 */
 
 /**
@@ -38,35 +32,14 @@ public class Game {
   private static Room currentRoom;
   // Nothing more than the storage of all information in the game
   private static Room[] rooms = new Room[] {
-    new Room("Hallway (1)", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Foyer", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Powder Room", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Closet", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
     new Room("Living Room", new Action[] {
+      new Action("", new Function() {
+        public void run() {
+
+        }
+      })
+    }),
+    new Room("Bathroom", new Action[] {
       new Action("", new Function() {
         public void run() {
 
@@ -87,49 +60,7 @@ public class Game {
         }
       })
     }),
-    new Room("Workshop", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Hallway (2)", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
     new Room("Christina's Room", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Closet", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Bathroom", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Veronica's Room", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Closet", new Action[] {
       new Action("", new Function() {
         public void run() {
 
@@ -143,21 +74,42 @@ public class Game {
         }
       })
     }),
-    new Room("Closet", new Action[] {
+    new Room("Veronica's Room", new Action[] {
       new Action("", new Function() {
         public void run() {
 
         }
       })
     }),
-    new Room("Family Room", new Action[] {
+    new Room("Workshop", new Action[] {
       new Action("", new Function() {
         public void run() {
 
         }
       })
     }),
-    new Room("Bathroom", new Action[] {
+    new Room("Christina's Bathroom", new Action[] {
+      new Action("", new Function() {
+        public void run() {
+
+        }
+      })
+    }),
+    new Room("Christina's Closet", new Action[] {
+      new Action("", new Function() {
+        public void run() {
+
+        }
+      })
+    }),
+    new Room("Lucia's Closet", new Action[] {
+      new Action("", new Function() {
+        public void run() {
+
+        }
+      })
+    }),
+    new Room("Veronica's Closet", new Action[] {
       new Action("", new Function() {
         public void run() {
 
@@ -220,24 +172,22 @@ public class Game {
   private static void resetGame() {
     isLost = false;
     moveCount = 0;
-    currentRoom = rooms[9];
+    currentRoom = rooms[0];
   }
 
   private static void initGame() {
     // Link all the rooms together
-    link(rooms, 0, new int[] {1, 4, 5, 6, 8});
-    link(rooms, 1, new int[] {2, 3});
-    link(rooms, 4, new int[] {5});
-    link(rooms, 6, new int[] {7});
-    link(rooms, 8, new int[] {9, 12, 14, 16, 17});
-    link(rooms, 9, new int[] {10, 11});
-    link(rooms, 12, new int[] {13});
-    link(rooms, 14, new int[] {15});
+    addLinks(0, new int[] {1, 2, 3, 4, 5, 6, 7});
+    addLinksIn(0, new int[] {8, 9, 10, 11});
+    addLinks(4, new int[] {8, 9});
+    addLinks(8, new int[] {9});
+    addLinks(5, new int[] {10});
+    addLinks(6, new int[] {11});
     // Add all of the people to their respective rooms
-    movePerson(people[0], 9);
-    movePerson(people[1], 9);
-    movePerson(people[2], 9);
-    movePerson(people[3], 9);
+    movePerson(people[0], 0);
+    movePerson(people[1], 0);
+    movePerson(people[2], 0);
+    movePerson(people[3], 0);
     // Call resetGame()
     resetGame();
   }
@@ -250,14 +200,34 @@ public class Game {
       .replaceAll("\\s+", " ");
   }
 
-  private static void link(Room[] rooms, int centralNode, int[] linkedNodes) {
+  private static void addLinksOut(int centralNode, int[] outNodes) {
     Room centralRoom = rooms[centralNode];
 
-    for (int i = 0; i < linkedNodes.length; i++) {
-      int linkedNode = linkedNodes[i];
-      Room linkedRoom = rooms[linkedNode];
-      centralRoom.links.add(linkedRoom);
-      linkedRoom.links.add(centralRoom);
+    for (int i = 0; i < outNodes.length; i++) {
+      int outNode = outNodes[i];
+      Room outRoom = rooms[outNode];
+      centralRoom.links.add(outRoom);
+    }
+  }
+
+  private static void addLinksIn(int centralNode, int[] inNodes) {
+    Room centralRoom = rooms[centralNode];
+
+    for (int i = 0; i < inNodes.length; i++) {
+      int inNode = inNodes[i];
+      Room inRoom = rooms[inNode];
+      inRoom.links.add(centralRoom);
+    }
+  }
+
+  private static void addLinks(int centralNode, int[] nodes) {
+    Room centralRoom = rooms[centralNode];
+
+    for (int i = 0; i < nodes.length; i++) {
+      int node = nodes[i];
+      Room room2 = rooms[node];
+      centralRoom.links.add(room2);
+      room2.links.add(centralRoom);
     }
   }
 
