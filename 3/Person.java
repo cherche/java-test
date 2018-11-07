@@ -1,7 +1,7 @@
 /**
  * Contains an array of Action instances and a name
  * @author Ryan Nguyen
- * @version 2018-10-30
+ * @version 2018-11-07
  */
 public class Person {
   public String name;

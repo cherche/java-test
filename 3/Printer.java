@@ -1,5 +1,10 @@
 import java.util.*;
 
+/**
+ * Adds nice methods for string outputs
+ * @author Ryan Nguyen
+ * @version 2018-11-07
+ */
 public class Printer {
   // Not strictly necessary to make this public,
   // but in our case, it will simplify things later on
@@ -16,6 +21,11 @@ public class Printer {
     this.delays = delays;
   }
 
+  /**
+   * Prints a string character-by-character
+   *
+   * @param string the String to be printed
+   */
   public void dialogue(String string) {
     // Essentially, if the delay is 0, why bother iterating anyway?
     // In words, the case of defDelay == 0 overrides the behaviour of
@@ -40,23 +50,43 @@ public class Printer {
     }
   }
 
+  /**
+   * Calls dialogue() on a string then prints a new line
+   *
+   * @param string the String to be printed
+   */
   public void dialogueln(String string) {
     dialogue(string);
     System.out.println("");
   }
 
+  /**
+   * Calls dialogueln() on a string, then opens a prompt to pause the program until the ENTER key is pressesd
+   *
+   * @param string the String to be printed
+   */
   public void dialogueChain(String string) {
     dialogue(string);
     // It's nice that IBIO.input() will add a new line for us
     IBIO.input("");
   }
 
+  /**
+   * Calls dialogueln() on each string, also opens a prompt after each string is printed
+   *
+   * @param strings an array of String instances to be printed
+   */
   public void dialogueChain(String[] strings) {
     for (int i = 0; i < strings.length; i++) {
       dialogueChain(strings[i]);
     }
   }
 
+  /**
+   * Pauses the program for some length of time
+   *
+   * @param delay the time for which the program will be paused in milliseconds
+   */
   public void wait(int delay) {
     try {
       Thread.sleep(delay);

@@ -1,24 +1,9 @@
 import java.util.*;
 
-/*
- 0 Living Room
- 1 Bathroom
- 2 Kitchen
- 3 Laundry Room
- 4 Christina's Room
- 5 Lucia's Room
- 6 Veronica's Room
- 7 Workshop
- 8 Christina's Bathroom
- 9 Christina's Closet
-10 Lucia's Closet
-11 Veronica's Closet
-*/
-
 /**
  * Contains everything needed to actually run the game
  * @author Ryan Nguyen
- * @version 2018-10-30
+ * @version 2018-11-07
  */
 public class Game {
   // Obviously, set DEF_DELAY to 0 if you want to speed things up a bit
@@ -36,6 +21,20 @@ public class Game {
   // As you may have guessed, the current room
   private static Room currentRoom;
   // Nothing more than the storage of all information in the game
+  /*
+   0 Living Room
+   1 Bathroom
+   2 Kitchen
+   3 Laundry Room
+   4 Christina's Room
+   5 Lucia's Room
+   6 Veronica's Room
+   7 Workshop
+   8 Christina's Bathroom
+   9 Christina's Closet
+  10 Lucia's Closet
+  11 Veronica's Closet
+  */
   private static Room[] rooms = new Room[] {
     new Room("Living Room", new Action[] {
       new Action("Inspect piano", new Function() {
@@ -223,12 +222,18 @@ public class Game {
     printer.dialogueln("You won the game. Congratulations!");
   }
 
+  /**
+   * Resets all relevant instance variables to their default value
+   */
   private static void resetGame() {
     isLost = false;
     moveCount = 0;
     currentRoom = rooms[0];
   }
 
+  /**
+   * A one-time method to initialize game variables to the desired state
+   */
   private static void initGame() {
     // Link all the rooms together
     addLinks(0, new int[] {1, 2, 3, 4, 5, 6, 7});
@@ -246,6 +251,12 @@ public class Game {
     resetGame();
   }
 
+  /**
+   * Removes all irrelevant characters for text input (in this program)
+   *
+   * @param string a string to be sanitized
+   * @return       a sanitized String
+   */
   private static String sanitize(String string) {
     return string
       .toLowerCase()
@@ -254,6 +265,12 @@ public class Game {
       .replaceAll("\\s+", " ");
   }
 
+  /**
+   * Adds rooms to the links of a room
+   *
+   * @param centralNode the index of the room to which links will be added
+   * @param outNodes    an array of indices of rooms which will be added
+   */
   private static void addLinksOut(int centralNode, int[] outNodes) {
     Room centralRoom = rooms[centralNode];
 
@@ -264,6 +281,12 @@ public class Game {
     }
   }
 
+  /**
+   * For a list of rooms, adds a room to the links of each
+   *
+   * @param centralNode the index of the room which will be added
+   * @param inNodes     an array of indices of rooms to which links will be added
+   */
   private static void addLinksIn(int centralNode, int[] inNodes) {
     Room centralRoom = rooms[centralNode];
 
@@ -274,6 +297,12 @@ public class Game {
     }
   }
 
+  /**
+   * For a list of rooms, adds a room to the links of each and vice-versa
+   *
+   * @param centralNode the index a room
+   * @param nodes       an array of indices of rooms
+   */
   private static void addLinks(int centralNode, int[] nodes) {
     Room centralRoom = rooms[centralNode];
 
@@ -285,6 +314,12 @@ public class Game {
     }
   }
 
+  /**
+   * Removes a person from all rooms, then adds them to one of them
+   *
+   * @param person just some Person instance
+   * @param dest   the index of the room to which the person will be added
+   */
   private static void movePerson(Person person, int dest) {
     // This is pretty inefficient
     // Ideally, since a person is expected to be in only one room at a time,
@@ -297,6 +332,14 @@ public class Game {
     rooms[dest].people.add(person);
   }
 
+  /**
+   * Creates a Printer instance
+   *
+   * @param defDelay    the default-length delay in milliseconds
+   * @param shortDelay  the short-length delay in milliseconds
+   * @param mediumDelay the medium-length delay in milliseconds
+   * @param longDelay   the long-length delay in milliseconds
+   */
   private static Printer getPrinter(int defDelay, int shortDelay, int mediumDelay, int longDelay) {
     Map<Character, Integer> delays = new HashMap<Character, Integer>();
     delays.put(',', shortDelay);
@@ -308,6 +351,11 @@ public class Game {
     return new Printer(defDelay, delays);
   }
 
+  /**
+   * Executes code given a room
+   *
+   * @param a room
+   */
   private static void runRoom(Room room) {
     // This part runs like a nested menu
     // Whenever an invalid option is submitted by
