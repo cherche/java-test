@@ -17,6 +17,14 @@ public class Printer {
   }
 
   public void dialogue(String string) {
+    // Essentially, if the delay is 0, why bother iterating anyway?
+    // In words, the case of defDelay == 0 overrides the behaviour of
+    // dialogue entirely. There never be a wait().
+    if (defDelay == 0) {
+      System.out.print(string);
+      return;
+    }
+
     for (int i = 0; i < string.length(); i++) {
       char character = string.charAt(i);
       System.out.print(character);

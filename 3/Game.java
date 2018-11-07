@@ -21,7 +21,12 @@ import java.util.*;
  * @version 2018-10-30
  */
 public class Game {
-  private static Printer printer = getPrinter();
+  // Obviously, set DEF_DELAY to 0 if you want to speed things up a bit
+  private static int DEF_DELAY = 30;
+  private static int SHORT_DELAY = 150;
+  private static int MEDIUM_DELAY = 200;
+  private static int LONG_DELAY = 250;
+  private static Printer printer = getPrinter(DEF_DELAY, SHORT_DELAY, MEDIUM_DELAY, LONG_DELAY);
   private static boolean isWon = false;
   private static boolean isLost = false;
   // Although we currently just store a move count,
@@ -33,30 +38,60 @@ public class Game {
   // Nothing more than the storage of all information in the game
   private static Room[] rooms = new Room[] {
     new Room("Living Room", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect piano", new Function() {
         public void run() {
-
+          printer.dialogueln("There is sheet music on the music stand.");
+          printer.dialogueChain("* Dancing Queen by ABBA *");
+        }
+      }),
+      new Action("Play the piano", new Function() {
+        public void run() {
+          printer.dialogueln("You played the piano, my dude");
         }
       })
     }),
     new Room("Bathroom", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect shelf", new Function() {
         public void run() {
-
+          printer.dialogueln("You inspected the shelf, my man");
+        }
+      }),
+      new Action("Inspect counter", new Function() {
+        public void run() {
+          printer.dialogueln("You inspected the counter");
         }
       })
     }),
     new Room("Kitchen", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect sink", new Function() {
         public void run() {
-
+          printer.dialogueln("Half of the dishes are, like, unwashed");
+        }
+      }),
+      new Action("Inspect fridge", new Function() {
+        public void run() {
+          printer.dialogueChain(new String[] {
+            "The fridge is just like me (the writer breaking the fourth wall right now).",
+            "A total mess."
+          });
+        }
+      }),
+      new Action("Inspect table", new Function() {
+        public void run() {
+          printer.dialogueln("You, like, see Veronica's homework");
         }
       })
     }),
     new Room("Laundry Room", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect ... everything", new Function() {
         public void run() {
-
+          printer.dialogueln("A long flowing red dress lies on the table");
+          printer.dialogueChain("Christina's clothes pile four feet high");
+          printer.dialogueln(
+            "and they're still unwashed\n"
+            + "Veronica's clothes are neatly folded;"
+            + "\nthey're ready to take to her closet"
+          );
         }
       })
     }),
@@ -119,29 +154,48 @@ public class Game {
   };
   private static Person[] people = new Person[] {
     new Person("Christina Park", new Action[] {
-      new Action("Forfeit", new Function() {
+      new Action("Talk", new Function() {
         public void run() {
-          printer.dialogueln("\"You lose the game\"");
-          isLost = true;
+
+        }
+      }),
+      new Action("Take quiz", new Function() {
+        public void run() {
+
         }
       })
     }),
     new Person("Veronica Zaveri", new Action[] {
-      new Action("", new Function() {
+      new Action("Play Blackjack", new Function() {
+        public void run() {
+
+        }
+      }),
+      new Action("Play Rock-Paper-Scissors", new Function() {
         public void run() {
 
         }
       })
     }),
     new Person("Robert Smith", new Action[] {
-      new Action("", new Function() {
+      new Action("Talk", new Function() {
+        public void run() {
+
+        }
+      }),
+      new Action("Answer math questions", new Function() {
+        public void run() {
+
+        }
+      }),
+      new Action("Ask about flowers", new Function() {
         public void run() {
 
         }
       })
     }),
     new Person("Lucia Yom", new Action[] {
-      new Action("", new Function() {
+      new Action("Talk", new Function() {
         public void run() {
 
         }
@@ -243,15 +297,15 @@ public class Game {
     rooms[dest].people.add(person);
   }
 
-  private static Printer getPrinter() {
+  private static Printer getPrinter(int defDelay, int shortDelay, int mediumDelay, int longDelay) {
     Map<Character, Integer> delays = new HashMap<Character, Integer>();
-    delays.put(',', 150);
-    delays.put(';', 200);
-    delays.put('.', 200);
-    delays.put('?', 200);
-    delays.put('!', 200);
-    delays.put('\n', 250);
-    return new Printer(75, delays);
+    delays.put(',', shortDelay);
+    delays.put(';', mediumDelay);
+    delays.put('.', mediumDelay);
+    delays.put('?', mediumDelay);
+    delays.put('!', mediumDelay);
+    delays.put('\n', longDelay);
+    return new Printer(defDelay, delays);
   }
 
   private static void runRoom(Room room) {
