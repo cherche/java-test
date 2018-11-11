@@ -7,11 +7,15 @@ import java.util.*;
  */
 public class Game {
   // Obviously, set DEF_DELAY to 0 if you want to speed things up a bit
-  private static int DEF_DELAY = 30;
-  private static int SHORT_DELAY = 150;
-  private static int MEDIUM_DELAY = 200;
-  private static int LONG_DELAY = 250;
+  private static int DEF_DELAY = 0;
+  private static int SHORT_DELAY = 100;
+  private static int MEDIUM_DELAY = 150;
+  private static int LONG_DELAY = 200;
   private static Printer printer = getPrinter(DEF_DELAY, SHORT_DELAY, MEDIUM_DELAY, LONG_DELAY);
+  private static boolean isFirstPlay = true;
+  private static boolean hasChristinaTrust = false;
+  private static boolean hasVeronicaTrust = false;
+  private static boolean hasRobertTrust = false;
   private static boolean isWon = false;
   private static boolean isLost = false;
   // Although we currently just store a move count,
@@ -45,39 +49,54 @@ public class Game {
       }),
       new Action("Play the piano", new Function() {
         public void run() {
-          printer.dialogueln("You played the piano, my dude");
+          if (!hasChristinaTrust || !hasVeronicaTrust || !hasRobertTrust) {
+            printer.dialogueln("You played a few notes but you were stared at with disapproval.");
+            return;
+          }
+
+          printer.dialogueln("You played the piano using the sheet music for Dancing Queen by ABBA.");
         }
       })
     }),
     new Room("Bathroom", new Action[] {
       new Action("Inspect shelf", new Function() {
         public void run() {
-          printer.dialogueln("You inspected the shelf, my man");
+          printer.dialogueChain(new String[] {
+            "- Toilet paper",
+            "- So\n- Much\n- Toilet Paper"
+          });
         }
       }),
       new Action("Inspect counter", new Function() {
         public void run() {
-          printer.dialogueln("You inspected the counter");
+          printer.dialogueChain(new String[] {
+            "- Hand lotion",
+            "- Hand soap",
+            "- Potted flowers (yellow tulips)"
+          });
         }
       })
     }),
     new Room("Kitchen", new Action[] {
       new Action("Inspect sink", new Function() {
         public void run() {
-          printer.dialogueln("Half of the dishes are, like, unwashed");
+          printer.dialogueln("Half of the dishes are unwashed");
         }
       }),
       new Action("Inspect fridge", new Function() {
         public void run() {
-          printer.dialogueChain(new String[] {
-            "The fridge is just like me (the writer breaking the fourth wall right now).",
-            "A total mess."
-          });
+          printer.dialogueChain("The fridge is just like me (the programmer breaking the fourth wall):");
+          printer.dialogueln("A terrible mess that's falling apart.");
         }
       }),
       new Action("Inspect table", new Function() {
         public void run() {
-          printer.dialogueln("You, like, see Veronica's homework");
+          printer.dialogueln(
+            "You see various documents of Veronica.\n"
+            + "* Trigonometry Review *\n"
+            + "* Macbeth *\n"
+            + "* Types of Colloids *"
+          );
         }
       })
     }),
@@ -116,9 +135,24 @@ public class Game {
       })
     }),
     new Room("Workshop", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect bookshelf", new Function() {
         public void run() {
-
+          printer.dialogueln(
+            "The shelves are full of textbooks:\n"
+            + "Biology, chemistry, physics,\n"
+            + "and so much history"
+          );
+        }
+      }),
+      new Action("Inspect table", new Function() {
+        public void run() {
+          printer.dialogueln(
+            "A metal box ahead stands taller than you do.\n"
+            + "It's but a mess of wires and metal scraps.\n"
+            + "On the other hand, blueprints titled\n"
+            + "\"Machine for Inspection of Past Historical Events\"\n"
+            + "engulf the table from one wooden edge to the other."
+          );
         }
       })
     }),
@@ -158,23 +192,11 @@ public class Game {
 
         }
       }),
-      new Action("Take quiz", new Function() {
-        public void run() {
-
-        }
-      })
+      new Action("Take quiz", new Quiz())
     }),
     new Person("Veronica Zaveri", new Action[] {
-      new Action("Play Blackjack", new Function() {
-        public void run() {
-
-        }
-      }),
-      new Action("Play Rock-Paper-Scissors", new Function() {
-        public void run() {
-
-        }
-      })
+      new Action("Play Blackjack", new Blackjack()),
+      new Action("Play Rock-Paper-Scissors", new RPS())
     }),
     new Person("Robert Smith", new Action[] {
       new Action("Talk", new Function() {
@@ -182,16 +204,8 @@ public class Game {
 
         }
       }),
-      new Action("Answer math questions", new Function() {
-        public void run() {
-
-        }
-      }),
-      new Action("Ask about flowers", new Function() {
-        public void run() {
-
-        }
-      })
+      new Action("Answer math questions", new MathQuestions()),
+      new Action("Ask about flowers", new Daisy())
     }),
     new Person("Lucia Yom", new Action[] {
       new Action("Talk", new Function() {
@@ -207,14 +221,47 @@ public class Game {
     initGame();
 
     while (!isWon) {
-      // Just for debugging
-      // System.out.println("Move count: " + moveCount);
+      if (moveCount == 0) {
+        printer.dialogueChain(". . . . . . . .");
+
+        // This first bit should only print the first time because
+        // it would be frustratingly repetitive if it did every time
+        if (isFirstPlay) {
+          printer.dialogueChain(new String[] {
+            "LUCIA: I say we get rid of him as soon as we can.",
+            "CHRISTINA: Absolutely not! He's clearly very sick.",
+            "ROBERT: Well-\n"
+            + "CHRISTINA: It's just the right thing to do, keepin' him here.",
+            "VERONICA: Mum, I think he's awake..."
+          });
+          isFirstPlay = false;
+        }
+
+        printer.dialogueln(
+          "CHRISTINA: Oh dear, how are you? We found you just at our door.\n"
+          + "VERONICA: You're welcome to stay here for as long as you need.\n"
+          + "LUCIA: Bu-but he's a complete stranger!\n"
+          + "CHRISTINA: One who's hurt and needs help!\n"
+          + "ROBERT: I think we should ... should let him rest for now. We can ... we can discuss this later.\n"
+          + "VERONICA: Yes, please - make yourself feel at home."
+        );
+      }
+
       runRoom(currentRoom);
 
-      if (isLost) {
-        // At the moment, the time loop is not explained to the user
-        // They must discover it themselves
-        printer.dialogueChain(". . .");
+      if (moveCount >= 12) {
+        // Just to catch the user's attention
+        printer.dialogueChain("You hear screaming from somewhere in the house.");
+        printer.dialogueln(
+          "CHRISTINA: Oh my god! What are you doing?!\n"
+          + "ROBERT: Miss! Are you alright?\n"
+          + "ROBERT: Miss! Please, just say something ... anything at all.\n"
+          + "VERONICA: Mum, please stay with us.\n"
+          + "Your hearing starts to fade along with the rest of your senses."
+        );
+      }
+
+      if (isLost || moveCount >= 12) {
         resetGame();
       }
     }
@@ -226,6 +273,9 @@ public class Game {
    * Resets all relevant instance variables to their default value
    */
   private static void resetGame() {
+    hasChristinaTrust = false;
+    hasVeronicaTrust = false;
+    hasRobertTrust = false;
     isLost = false;
     moveCount = 0;
     currentRoom = rooms[0];
@@ -258,6 +308,12 @@ public class Game {
    * @return       a sanitized String
    */
   private static String sanitize(String string) {
+    // Regular expressions kind of throw readability
+    // out the window, but here we go:
+    // 1. Turn all uppercase letters to their lowercase counterparts
+    // 2. Remove all non-alphanumeric non-space characters
+    // 3. Remove leading and trailing whitespace
+    // 4. Compress all adjacent whitespace with a single space
     return string
       .toLowerCase()
       .replaceAll("[^0-9a-z ]+", "")
@@ -351,10 +407,11 @@ public class Game {
     return new Printer(defDelay, delays);
   }
 
+
   /**
    * Executes code given a room
    *
-   * @param a room
+   * @param room a room
    */
   private static void runRoom(Room room) {
     // This part runs like a nested menu
@@ -364,7 +421,8 @@ public class Game {
     // just re-open the currentRoom
     boolean hasPeople = room.people.size() > 0;
     String roomName = room.name.toUpperCase();
-    System.out.println("\n# " + roomName);
+    String title = "\n# " + roomName + " @ " + getTime(moveCount);
+    System.out.println(title);
     System.out.println("[0] Move");
     System.out.println("[1] Act");
 
@@ -379,7 +437,8 @@ public class Game {
     int activity = IBIO.inputInt("");
 
     if (activity == 0) {
-      System.out.println("\n# " + roomName + " : Move");
+      title += " : Move";
+      System.out.println(title);
       Room[] links = room.links.toArray(new Room[0]);
 
       for (int i = 0; i < links.length; i++) {
@@ -392,10 +451,15 @@ public class Game {
       try {
         currentRoom = links[linkIndex];
       } catch (Exception e) {
-        return;
+
       }
+
+      // Basically, we don't want movement from one room to
+      // another to count as a move so we'll return right here
+      return;
     } else if (activity == 1) {
-      System.out.println("\n# " + roomName + " : Act");
+      title += " : Act";
+      System.out.println(title);
       Action[] actions = room.actions;
 
       for (int i = 0; i < actions.length; i++) {
@@ -412,7 +476,8 @@ public class Game {
         return;
       }
     } else if (activity == 2 && hasPeople) {
-      System.out.println("\n# " + roomName + " : Interact");
+      title += " : Interact";
+      System.out.println(title);
       Person[] people = room.people.toArray(new Person[0]);
 
       for (int i = 0; i < people.length; i++) {
@@ -424,7 +489,8 @@ public class Game {
 
       try {
         Person person = people[personIndex];
-        System.out.println("\n# " + roomName + " : Interact : " + person.name);
+        title += " : " + person.name;
+        System.out.println(title);
         Action[] actions = person.actions;
 
         for (int i = 0; i < actions.length; i++) {
@@ -450,5 +516,45 @@ public class Game {
     // And finally, if we got through all of that with no errors
     // (and therefore no returning):
     moveCount++;
+  }
+
+  private static String getTime(int moveCount) {
+    int minutes = moveCount * 5;
+    int hour = 11 + minutes / 60;
+    int minute = minutes % 60;
+    // The String.format() just ensures that leading zeros are included where necessary
+    return String.format("%02d", hour) + ":" + String.format("%02d", minute) + "PM";
+  };
+
+  // If I were a better person, I would've modularized things a bit better,
+  // but as you can see, all of these classes must be in this class
+  private static class Quiz implements Function {
+    public void run() {
+      printer.dialogueln("Quiz");
+    }
+  }
+
+  private static class Blackjack implements Function {
+    public void run() {
+      printer.dialogueln("Blackjack");
+    }
+  }
+
+  private static class RPS implements Function {
+    public void run() {
+      printer.dialogueln("RPS");
+    }
+  }
+
+  private static class MathQuestions implements Function {
+    public void run() {
+      printer.dialogueln("MathQuestions");
+    }
+  }
+
+  private static class Daisy implements Function {
+    public void run() {
+      printer.dialogueln("Daisy");
+    }
   }
 }
