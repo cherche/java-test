@@ -67,8 +67,15 @@ public class Printer {
    */
   public void dialogueChain(String string) {
     dialogue(string);
-    // It's nice that IBIO.input() will add a new line for us
-    IBIO.input("");
+
+    if (defDelay == 0) {
+      // Again, we wish to make this Printer super fast
+      // if the defDelay is 0
+      System.out.println("");
+    } else {
+      // It's nice that IBIO.input() will add a new line for us
+      IBIO.input("");
+    }
   }
 
   /**
