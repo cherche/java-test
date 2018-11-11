@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class Game {
   // Obviously, set DEF_DELAY to 0 if you want to speed things up a bit
-  private static int DEF_DELAY = 0;
+  private static int DEF_DELAY = /*30/*/0/**/;
   private static int SHORT_DELAY = 100;
   private static int MEDIUM_DELAY = 150;
   private static int LONG_DELAY = 200;
@@ -16,6 +16,7 @@ public class Game {
   private static boolean hasChristinaTrust = false;
   private static boolean hasVeronicaTrust = false;
   private static boolean hasRobertTrust = false;
+  private static boolean hasPlayedPiano = false;
   private static boolean isWon = false;
   private static boolean isLost = false;
   // Although we currently just store a move count,
@@ -45,6 +46,16 @@ public class Game {
         public void run() {
           printer.dialogueln("There is sheet music on the music stand.");
           printer.dialogueChain("* Dancing Queen by ABBA *");
+
+          if (hasPlayedPiano) {
+            printer.dialogueln("You open up the piano and find a journal.");
+            System.out.println("/=====/");
+            System.out.println("|...../");
+            System.out.println("|LUCIA/");
+            System.out.println("|...../");
+            System.out.println("L_____/");
+            isWon = true;
+          }
         }
       }),
       new Action("Play the piano", new Function() {
@@ -54,7 +65,12 @@ public class Game {
             return;
           }
 
-          printer.dialogueln("You played the piano using the sheet music for Dancing Queen by ABBA.");
+          hasPlayedPiano = true;
+          printer.dialogueln(
+            "You played the piano using the sheet music for Dancing Queen by ABBA. "
+            + "Oddly, the an entire octave of keys are completely stuck, but everything else plays fine. "
+            + "How frustrating."
+          );
         }
       })
     }),
@@ -217,11 +233,36 @@ public class Game {
   };
 
   public static void main(String[] args) {
-    System.out.println("Note: Enter an invalid response at any point to escape menus.");
     initGame();
+    System.out.println("# TIME AND TIME AGAIN");
+    System.out.println("## A Doctor Who fan game");
+    System.out.println("Note: Enter an invalid response at any point to escape menus.");
+    IBIO.input("");
+    printer.dialogueChain(new String[] {
+      "DOCTOR: Well, where to now? Perhaps ... no, been there and done that.",
+      "Maybe ... no, absolutely not. Too violent.",
+      "Perhaps we just stay on Earth? See Queen Vic?"
+    });
+    printer.dialogueln(
+      "Yes, that seems quite nice.\n"
+      + "HERE! WE! GO!\n"
+      + "...\n"
+      + "...\n"
+      + "Well, that doesn't sound very good. Everything sounds terribly terrible."
+    );
+    printer.dialogueChain("Maybe a kick will help it out.");
+    printer.dialogueln(
+      "Well, that didn't work at all. I guess I could just-\n"
+      + "The TARDIS shook furiously and knocked the Doctor off his feet. "
+      + "All of the knobs and switches rattled. The doors flew open and the TARDIS rotated, slowly pouring the Doctor out of its doors.\n"
+      + "DOCTOR: No! What are you doing? If there was a list of things that I didn't want you to do, this would be very high up on it!\n"
+      + "Barely holding onto the doors, a final bump threw the Doctor through the night sky. He luckily fell onto a tree, but tumbled to the floor."
+    );
 
     while (!isWon) {
       if (moveCount == 0) {
+        System.out.println("");
+        printer.dialogueln("Your hearing starts to fade along with the rest of your senses.");
         printer.dialogueChain(". . . . . . . .");
 
         // This first bit should only print the first time because
@@ -256,8 +297,7 @@ public class Game {
           "CHRISTINA: Oh my god! What are you doing?!\n"
           + "ROBERT: Miss! Are you alright?\n"
           + "ROBERT: Miss! Please, just say something ... anything at all.\n"
-          + "VERONICA: Mum, please stay with us.\n"
-          + "Your hearing starts to fade along with the rest of your senses."
+          + "VERONICA: Mum, please stay with us."
         );
       }
 
@@ -266,7 +306,67 @@ public class Game {
       }
     }
 
-    printer.dialogueln("You won the game. Congratulations!");
+    printer.dialogueChain(new String[] {
+      "\tWell, today, I was taken back to 2008 because of that MIPHE - a very awkward name, if I may add - "
+      + "and I just want to return home, but that isn't how it works at all. "
+      + "It goes one way. You can only go back; not forward. If they just waited "
+      + "a bit longer for the technology, but those historians are just obsessed.\n",
+      "\tToday, I found work. It's crazy how different things are in the 21st century. "
+      + "I think I actually hate it. All of their tools are manual. "
+      + "It shocks me to see people working at all. The history books have it all wrong! "
+      + "This world, or time, is quite a nightmare. I just wish I could get back to my home. "
+      + "That cursed machine! The MIPHE took me here, "
+      + "and luckily for me, it was made by my employer: a Ms Christina Park. "
+      + "If I can just get rid of her now ... but what if it doesn't work? "
+      + "It would so obviously be me. I don't want to be incarcerated for trying to get home!\n",
+      "\tI think I fully understand what I'm doing now, but I'm not really a physicist. "
+      + "Science fiction movies are a good substitute for a real education, I hope. "
+      + "If I kill Ms Park before she creates the MIPHE, I couldn't have possible been "
+      + "taken back to the 21st century! I can't see how this could possible go wrong.\n",
+      "\tLuckily for me, a man just appeared unconscious on our doorstep! It's only 10AM, but a month "
+      + "here is more than enough. Some may say that this timing was way too convenient to seem "
+      + "realistic, and they'd be right. It's like the last decade of my life had been thought "
+      + "up by the world's laziest writer of all time.\n",
+      "\tToday is a big day. Ten years of waiting. It's been eight hours, but he still isn't up. I have thought of something, "
+      + "though. If I eliminate Ms Park today, even if something goes wrong and I'm stuck in this "
+      + "miserable century for the rest of my life, there's still a stranger to frame. "
+      + "What's more likely? I, the innocent long-time maid of the Zaveri family, killed "
+      + "Park, or a stranger who has no identification did?\n"
+    });
+    printer.dialogueln(
+      "DOCTOR: Lucia! Could you come here?\n"
+      + "LUCIA: Well, if you insist. My day is quite busy thou-\n"
+      + "LUCIA: Where are your manners? Never look through someone else's belongings!\n"
+      + "DOCTOR: It might be warranted if they're hidden in a piano and contain a poorly thought-out murder scheme.\n"
+      + "DOCTOR: Doing something bad doesn't always make you bad, however. Your situation changes you; everyone makes mistakes and, more often than not, be forgiven.\n"
+      + "DOCTOR: Huh, that seems like a really straightforward lesson to put in for the children.\n"
+      + "LUCIA: Excuse me?\n"
+      + "DOCTOR: Oh, nothing. Just imagining my life as a children's video game.\n"
+      + "LUCIA: That would explain all of the convniences in the plot of my life. Seriously it-\n"
+      + "DOCTOR: I can take you back to your time, which is ...?\n"
+      + "LUCIA: The 23rd century: 2205. But how can you do that?\n"
+      + "The TARDIS materializes within the house as if answering Lucia's question.\n"
+      + "DOCTOR: If you think that that's incredible, just wait until-\n"
+      + "But Lucia ignored the Doctor and rushed right into the highly conspicuous blue box.\n"
+      + "LUCIA: It's-it's bigg-\n"
+      + "DOCTOR: -er on the inside. Yes, I've heard. Come on, let's hurry up.\n"
+      + "The Doctor abandoned the house and left a scribbled note on the kitchen countertop.\n"
+      + "DOCTOR: Now, it's time to sabotage myself. The TARDIS never fails to land in the right place!\n"
+      + "DOCTOR: Well, except for the many times that it does, but regardless, I'll just quickly need to sneak into my old TARDIS.\n"
+      + "The present Doctor rushed in and rigged his own TARDIS, just before his past counterpart reappeared.\n"
+      + "PRESENT DOCTOR: Oop, I think I may be approaching. You've got an adventure ahead of ... I've got an adventure ... I don't even know. That man entering this TARDIS has got an adventure ahead of him.\n"
+      + "The present Doctor dematerializes in his TARDIS.\n"
+    );
+    printer.dialogueChain(new String[] {
+      "PAST DOCTOR: Well, where to now? Perhaps ... no, been there and done that.",
+      "Maybe ... no, absolutely not. Too violent.",
+      "Perhaps we just stay on Earth? See Queen Vic?"
+    });
+    printer.dialogueln(
+      "Yes, that seems quite nice.\n"
+      + "HERE! WE! GO!\n"
+    );
+    System.out.println("\nTHE END.");
   }
 
   /**
@@ -277,6 +377,7 @@ public class Game {
     hasVeronicaTrust = false;
     hasRobertTrust = false;
     isLost = false;
+    hasPlayedPiano = false;
     moveCount = 0;
     currentRoom = rooms[0];
   }
