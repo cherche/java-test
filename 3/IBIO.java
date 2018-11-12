@@ -112,7 +112,7 @@ public class IBIO {
     try {
       result = Double.valueOf(input(prompt).trim()).doubleValue();
     } catch (Exception e) {
-      result = 0;
+      result = -1;
     }
 
     return result;

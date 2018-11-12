@@ -269,7 +269,7 @@ public class Game {
           printer.dialogueln("CHRISTINA: " + messages[(int) (Math.random() * messages.length)]);
         }
       }),
-      new Action("Take quiz", new Quiz())
+      new Action("Take quiz", new CQuiz())
     }),
     new Person("Veronica Zaveri", new Action[] {
       new Action("Play Blackjack", new Function() {
@@ -480,7 +480,7 @@ public class Game {
     moveCount = 0;
     currentRoom = rooms[0];
     // Move all of the people to random rooms
-    //shufflePeople();
+    shufflePeople();
   }
 
   /**
@@ -748,14 +748,50 @@ public class Game {
   // If I were a better person, I would've modularized things a bit better,
   // but as you can see, all of these classes must be in this class
   // Christina
-  private static class Quiz implements Function {
+  private static class CQuiz implements Function {
     public void run() {
-      if (!hasChristinaTrust) {
+      Question[] questions = new Question[] {
+        new Question("Who first invented calculus?", 0, new String[] {
+          "Newton and Leibniz",
+          "Newton",
+          "Leibniz",
+          "Einstein",
+          "Newton and Einstein"
+        }),
+        new Question("Force may be measured in: ", 1, new String[] {
+          "Joules",
+          "Newtons",
+          "Volts",
+          "Metres per second"
+        }),
+        new Question("Light is _____ a wave ___ a particle.", 3, new String[] {
+          "neither; nor",
+          "only; and not",
+          "not; but is",
+          "both; and"
+        }),
+        new Question("The atomic bombings of Hiroshima and Nagasaki took place in ...", 2, new String[] {
+          "1944",
+          "1918",
+          "1945",
+          "1970"
+        }),
+        new Question("Velocity is measured in", 2, new String[] {
+          "Joules",
+          "Metres per second squared",
+          "Metres per second",
+          "Metres per second cubed"
+        })
+      };
+      Quiz quiz = new Quiz(questions);
+      quiz.run();
+
+      // You gain Christina's trust if you get at least 50%
+      if (quiz.getScore() >= questions.length / 2 && !hasChristinaTrust) {
         hasChristinaTrust = true;
+        System.out.println("");
         printer.dialogueln("* Gained Christina's trust *");
       }
-
-      printer.dialogueln("Quiz");
     }
   }
 
@@ -820,13 +856,19 @@ public class Game {
 
   private static class MathQuestions implements Function {
     public void run() {
-      if (!hasRobertTrust) {
-        hasRobertTrust = true;
-        printer.dialogueln("* Gained Robert's trust *");
-        printer.dialogueln("LUCIA: Did anyone else hear a voice whispering, \"Gained Robert's trust?\" No? Just me?");
-      }
-
-      printer.dialogueln("MathQuestions");
+      Question[] questions = new Question[] {
+        new Question("What is the decimal value of Pi rounded to the nearest hundredth?", 3.14),
+        new Question("What is the decimal value of Euler's number rounded to the nearest hundred thousandth?", 2.71828),
+        new Question("Determine the length of the hypotenuse of a right triangle with legs of lengths 3 and 4.", 5),
+        new Question("Determine an integer root of the polynomial x(2x - 1).", 0),
+        new Question("What is the sum of the interior angles of a triangle in degrees?", 180),
+        new Question("Determine the length of the remaining leg of a right triangle with a hypotenuse of length 26 and a leg of length 24.", 10)
+      };
+      Quiz quiz = new Quiz(questions);
+      quiz.run();
+      printer.dialogueln("You answered " + quiz.getScore() + " of " + questions.length + " questions correctly.");
+      // Wow, what a twist. It turns out that doing his
+      // math questions actually never gains you his trust.
     }
   }
 
@@ -858,6 +900,17 @@ public class Game {
 
       if (petalCount % 2 == 0) {
         printer.dialogueln("ROBERT: That's lovely! I guess I'll just keep daydreaming as I usually do.");
+
+        if (!hasRobertTrust) {
+          hasRobertTrust = true;
+          printer.dialogueln("* Gained Robert's trust *");
+
+          // Little fourth wall-breaking Easter egg
+          // 5% chance of occurring
+          if (Math.random() < 0.05) {
+            printer.dialogueln("LUCIA: Did anyone else hear a voice whisper, \"Gained Robert's trust?\" No? Just me?");
+          }
+        }
       } else {
         printer.dialogueln("ROBERT: That ... means nothing. It's just a silly game.");
       }
