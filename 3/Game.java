@@ -13,6 +13,8 @@ public class Game {
   private static int LONG_DELAY = 200;
   private static Printer printer = getPrinter(DEF_DELAY, SHORT_DELAY, MEDIUM_DELAY, LONG_DELAY);
   private static boolean isFirstPlay = true;
+  private static Room veronicaRoom;
+  private static Room robertRoom;
   private static boolean hasChristinaTrust = false;
   private static boolean hasVeronicaTrust = false;
   private static boolean hasRobertTrust = false;
@@ -37,8 +39,6 @@ public class Game {
    7 Workshop
    8 Christina's Bathroom
    9 Christina's Closet
-  10 Lucia's Closet
-  11 Veronica's Closet
   */
   private static Room[] rooms = new Room[] {
     new Room("Living Room", new Action[] {
@@ -130,23 +130,85 @@ public class Game {
       })
     }),
     new Room("Christina's Room", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect desk", new Function() {
         public void run() {
-
+          printer.dialogueln(
+            "The desk has a three-foot tall stack of books about time travel. "
+            + "A notebook lays open next to them. It has various equations "
+            + "scribbled out, but the rest is totally illegible. "
+            + "Thank god Christina isn't a doctor."
+          );
         }
       })
     }),
     new Room("Lucia's Room", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect room", new Function() {
         public void run() {
-
+          printer.dialogueln(
+            "The room is very well-kept, but eerily lacks any personalization. "
+            + "There are no photographs, paintings, or even skin care products anywhere. "
+            + "In fact, the walls are their original white, and the room contains the "
+            + "bare minimum for a bedroom: a bed, and empty small table, and an upright chair."
+          );
+        }
+      }),
+      new Action("Inspect closet", new Function() {
+        public void run() {
+          printer.dialogueln(
+            "Maid uniforms fill the closet from wall to wall. "
+            + "The top shelf is scattered with what resembles American currency, "
+            + "but you've never seen the faces before. It also has a set of "
+            + "all-black clothing."
+          );
         }
       })
     }),
     new Room("Veronica's Room", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect room", new Function() {
         public void run() {
-
+          printer.dialogueln(
+            "The room still smells of fresh paint. You wonder why anyone "
+            + "would even bother painting a room in such a faint tint of blue. "
+            + "A calendar that would've hung on the wall lies on the desk. "
+            + "It's marked with club meetings and assignment due dates."
+          );
+        }
+      }),
+      new Action("Inspect bookshelf", new Function() {
+        public void run() {
+          printer.dialogueln(
+            "The bookshelf is full of literature. The specifics might've "
+            + "been included if the writer actually did some extra research."
+          );
+        }
+      }),
+      new Action("Inspect closet", new Function() {
+        public void run() {
+          System.out.println("  ____");
+          System.out.println(" /   /|");
+          System.out.println("/___/ |");
+          System.out.println("|   | |");
+          System.out.println("|___|/");
+          printer.dialogueln("In a small cardboard box, Veronica has stored many little notes, letters, and even a diary, all admiring Robert.");
+        }
+      }),
+      new Action("Check smartphone", new Function() {
+        public void run() {
+          printer.dialogueChain(new String[] {
+            "The phone is open to a text conversation with Robert.",
+            "V: Hey\n"
+            + "R: Hello\n"
+            + "V: Are you coming to the dance\n"
+            + "R: I think so. Are you?",
+            "Based on the message send times, Veronica took an hour to come up with this brilliant message:\n"
+            + "V: Maybe",
+            "R: Do you want to come with me?",
+            "R: Or come at all?",
+            "Although these are just text messages, it was apparent that Robert blushed.\n"
+            + "R: I just think we'd all be happier if you came",
+            "V: I think I will now :)",
+            "R: I'm looking forward to seeing you!"
+          });
         }
       })
     }),
@@ -173,30 +235,21 @@ public class Game {
       })
     }),
     new Room("Christina's Bathroom", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect room", new Function() {
         public void run() {
-
+          printer.dialogueln("Although hygiene products are scattered all over the counter and floor, the room surprisingly has no odour.");
         }
       })
     }),
     new Room("Christina's Closet", new Action[] {
-      new Action("", new Function() {
+      new Action("Inspect room", new Function() {
         public void run() {
-
-        }
-      })
-    }),
-    new Room("Lucia's Closet", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
-        }
-      })
-    }),
-    new Room("Veronica's Closet", new Action[] {
-      new Action("", new Function() {
-        public void run() {
-
+          printer.dialogueln(
+            "This is her own closet, but Christina's kept it full with her late husband's clothes. "
+            + "One may wonder how she even dresses herself for seven days in a row. "
+            + "The shelf, however, contains a photo album of her husband's family throughout the years. "
+            + "For you, the only photo of note is of Lucia from 2008."
+          );
         }
       })
     })
@@ -205,19 +258,59 @@ public class Game {
     new Person("Christina Park", new Action[] {
       new Action("Talk", new Function() {
         public void run() {
-
+          String[] messages = new String[] {
+            "Lucia Yom has always been here. She's been here since before Veronica was born.",
+            "Lucia is quite peculiar ... sometimes she goes off about the cleaning products. I think she has a good heart, though. Can never tell a lie.",
+            "My daughter is everything to me. If you asked me before I had her, I would never have even thought about having a child since it would take away from my work. Now, I wouldn't have it any other way.",
+            "It was hard to trust Robert at first. He's so distant. I was actually concerned about Veronica for having friends like that! He's a really good kid, though.",
+            "What it was like being young ... Those two kids Veronica and Robert have it so easy, but they're making it so hard for themselves! Just say something already!",
+            "Sometimes my parents' voices echo in my head. \"You're getting a degree in both history and physics? That's ridiculous!\" But I guess I showed them with my mildly successful life."
+          };
+          printer.dialogueln("CHRISTINA: " + messages[(int) (Math.random() * messages.length)]);
         }
       }),
       new Action("Take quiz", new Quiz())
     }),
     new Person("Veronica Zaveri", new Action[] {
-      new Action("Play Blackjack", new Blackjack()),
+      new Action("Play Blackjack", new Function() {
+        public void run() {
+          if (!hasVeronicaTrust) {
+            hasVeronicaTrust = true;
+            printer.dialogueln("* Gained Veronica's trust *");
+          }
+
+          // Just to see whether or not you won the game of Blackjack
+          int blackJackStatus = Blackjack.run();
+
+          if (blackJackStatus == 1) {
+            int index = 0;
+
+            // Need to make sure Veronica moves to a different room
+            // Not to the one she's currently in
+            do {
+              index = (int) (Math.random() * 8);
+            } while (rooms[index] == veronicaRoom);
+
+            movePerson(people[1], index);
+            veronicaRoom = rooms[index];
+          }
+        }
+      }),
       new Action("Play Rock-Paper-Scissors", new RPS())
     }),
     new Person("Robert Smith", new Action[] {
       new Action("Talk", new Function() {
         public void run() {
+          if (robertRoom.people.size() > 1) {
+            printer.dialogueln("ROBERT: I'm sorry, I can't do that. There are other people here.");
+            return;
+          }
 
+          printer.dialogueln(
+            "ROBERT: You don't know us. You're unbiased. Do you ... think that Veronica might ... like me? "
+            + "I know that that's a weird thing to ask someone you just met, but "
+            + "I just want to know. To tell me that maybe ... just maybe she likes me too."
+          );
         }
       }),
       new Action("Answer math questions", new MathQuestions()),
@@ -226,7 +319,13 @@ public class Game {
     new Person("Lucia Yom", new Action[] {
       new Action("Talk", new Function() {
         public void run() {
-
+          String[] messages = new String[] {
+            "I love that everyone consistently does the opposite of what I say. Reverse psychology.",
+            "Cleaning is so hard! Maids from this ... place should get paid so much more.",
+            "I miss home. It's hard being so far away. It feels like you'll never get to go back.",
+            "You ever notice how people seem to have very restricted language? It's like, \"I've got four different sentences and I'll select a random one to say each time.\" So weird."
+          };
+          printer.dialogueln("LUCIA: " + messages[(int) (Math.random() * messages.length)]);
         }
       })
     })
@@ -234,10 +333,9 @@ public class Game {
 
   public static void main(String[] args) {
     initGame();
-    System.out.println("# TIME AND TIME AGAIN");
-    System.out.println("## A Doctor Who fan game");
+    System.out.println("[ TIME AND TIME AGAIN | A Doctor Who fan game ]");
     System.out.println("Note: Enter an invalid response at any point to escape menus.");
-    IBIO.input("");
+    IBIO.input("Press ENTER to start.\n");
     printer.dialogueChain(new String[] {
       "DOCTOR: Well, where to now? Perhaps ... no, been there and done that.",
       "Maybe ... no, absolutely not. Too violent.",
@@ -292,12 +390,13 @@ public class Game {
 
       if (moveCount >= 12) {
         // Just to catch the user's attention
-        printer.dialogueChain("You hear screaming from somewhere in the house.");
+        printer.dialogueChain("\nAs the clock strikes at midnight, you hear screaming from somewhere in the house.");
         printer.dialogueln(
           "CHRISTINA: Oh my god! What are you doing?!\n"
           + "ROBERT: Miss! Are you alright?\n"
           + "ROBERT: Miss! Please, just say something ... anything at all.\n"
-          + "VERONICA: Mum, please stay with us."
+          + "VERONICA: Mum, please stay with us.\n"
+          + "Sobbing echoes throughout the house."
         );
       }
 
@@ -380,6 +479,8 @@ public class Game {
     hasPlayedPiano = false;
     moveCount = 0;
     currentRoom = rooms[0];
+    // Move all of the people to random rooms
+    //shufflePeople();
   }
 
   /**
@@ -388,11 +489,9 @@ public class Game {
   private static void initGame() {
     // Link all the rooms together
     addLinks(0, new int[] {1, 2, 3, 4, 5, 6, 7});
-    addLinksIn(0, new int[] {8, 9, 10, 11});
+    addLinksIn(0, new int[] {8, 9});
     addLinks(4, new int[] {8, 9});
     addLinks(8, new int[] {9});
-    addLinks(5, new int[] {10});
-    addLinks(6, new int[] {11});
     // Add all of the people to their respective rooms
     movePerson(people[0], 0);
     movePerson(people[1], 0);
@@ -403,7 +502,26 @@ public class Game {
   }
 
   /**
-   * Removes all irrelevant characters for text input (in this program)
+   * Moves each person to a random room
+   */
+  private static void shufflePeople() {
+    for (int i = 0; i < people.length; i++) {
+      Person person = people[i];
+      int index = (int) (Math.random() * 8);
+      movePerson(person, index);
+
+      // Lazy implementation of rooms and people
+      // A Person instance, unfortunately, has no idea where they are
+      if (i == 2) {
+        robertRoom = rooms[index];
+      } else if (i == 1) {
+        veronicaRoom = rooms[index];
+      }
+    }
+  }
+
+  /**
+   * Removes all irrelevant characters (with regards to this program)
    *
    * @param string a string to be sanitized
    * @return       a sanitized String
@@ -629,33 +747,136 @@ public class Game {
 
   // If I were a better person, I would've modularized things a bit better,
   // but as you can see, all of these classes must be in this class
+  // Christina
   private static class Quiz implements Function {
     public void run() {
+      if (!hasChristinaTrust) {
+        hasChristinaTrust = true;
+        printer.dialogueln("* Gained Christina's trust *");
+      }
+
       printer.dialogueln("Quiz");
     }
   }
 
-  private static class Blackjack implements Function {
-    public void run() {
-      printer.dialogueln("Blackjack");
-    }
-  }
-
+  // Veronica
   private static class RPS implements Function {
     public void run() {
-      printer.dialogueln("RPS");
+      if (!hasVeronicaTrust) {
+        hasVeronicaTrust = true;
+        printer.dialogueln("* Gained Veronica's trust *");
+      }
+
+      do {
+        System.out.println("");
+        String playerChoice = "";
+
+        // Make sure that the playerChoice is either rock, paper, or scissors
+        // Seriously, if it isn't one of them, what will I do?
+        do {
+          playerChoice = sanitize(IBIO.inputString("Choose rock, paper, or scissors: "));
+        } while (!playerChoice.equals("rock") && !playerChoice.equals("paper") && !playerChoice.equals("scissors"));
+
+        String computerChoice = "";
+        boolean playerWins = false;
+        int index = (int) (Math.random() * 3);
+
+        if (index == 0) {
+          computerChoice = "rock";
+        } else if (index == 1) {
+          computerChoice = "paper";
+        } else {
+          computerChoice = "scissors";
+        }
+
+        printer.dialogueln("Computer choice: " + computerChoice);
+
+        // If it's a tie, we don't need to deal with any additional comparison
+        if (playerChoice.equals(computerChoice)) {
+          printer.dialogueln("It's a tie!");
+          continue;
+        }
+
+        // If it's not a tie, check to see if the player won or lost
+        // Now, efficiency-wise, we'd compare the index, but this is
+        // a lot more readable
+        if (playerChoice.equals("rock")) {
+          playerWins = computerChoice.equals("scissors");
+        } else if (playerChoice.equals("paper")) {
+          playerWins = computerChoice.equals("rock");
+        } else {
+          playerWins = computerChoice.equals("paper");
+        }
+
+        // Now, just print out the result
+        if (playerWins) {
+          printer.dialogueln(playerChoice + " beats " + computerChoice);
+        } else {
+          printer.dialogueln(playerChoice + " loses to " + computerChoice);
+        }
+      } while ('y' == IBIO.inputChar("Do you want to play again? (y/N) "));
     }
   }
 
   private static class MathQuestions implements Function {
     public void run() {
+      if (!hasRobertTrust) {
+        hasRobertTrust = true;
+        printer.dialogueln("* Gained Robert's trust *");
+        printer.dialogueln("LUCIA: Did anyone else hear a voice whispering, \"Gained Robert's trust?\" No? Just me?");
+      }
+
       printer.dialogueln("MathQuestions");
     }
   }
 
+  // Robert
   private static class Daisy implements Function {
     public void run() {
-      printer.dialogueln("Daisy");
+      if (robertRoom.people.size() > 1) {
+        printer.dialogueln("ROBERT: I'm sorry, I can't do that. There are other people here.");
+        return;
+      }
+
+      printer.dialogueChain(new String[] {
+        "ROBERT: Flowers are really beautiful. You know that one little game where you pull off petals-",
+        "DOCTOR: And each time you alternate between saying \"she loves me\" and \"she loves me not?\"",
+        "ROBERT: Oh, is that really common? Anyways, I like it. Hope is a wonderful thing.",
+        "ROBERT: Well, here we go:"
+      });
+
+      int petalCount = getRandomInt(15, 25);
+
+      for (int i = 1; i <= petalCount; i++) {
+        String message = (i % 2 == 0)
+          ? "She loves me."
+          : "She loves me not.";
+        System.out.println(message);
+        // Slow things down a bit to increase anxiety
+        caughtSleep(250);
+      }
+
+      if (petalCount % 2 == 0) {
+        printer.dialogueln("ROBERT: That's lovely! I guess I'll just keep daydreaming as I usually do.");
+      } else {
+        printer.dialogueln("ROBERT: That ... means nothing. It's just a silly game.");
+      }
+    }
+
+    // As usual, min-inclusive and max-exclusive
+    private static int getRandomInt(int min, int max) {
+      int range = max - min;
+      return (int) (Math.random() * range) + min;
+    }
+
+    // I wasn't quite sure what to name it,
+    // but this seems like a safe bet
+    private static void caughtSleep(int time) {
+      try {
+        Thread.sleep(time);
+      } catch (InterruptedException e) {
+
+      }
     }
   }
 }
