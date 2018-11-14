@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class Game {
   // Obviously, set DEF_DELAY to 0 if you want to speed things up a bit
-  private static int DEF_DELAY = 10;
+  private static int DEF_DELAY = 0;
   private static int SHORT_DELAY = 75;
   private static int MEDIUM_DELAY = 125;
   private static int LONG_DELAY = 175;
@@ -19,6 +19,7 @@ public class Game {
   private static boolean hasVeronicaTrust = false;
   private static boolean hasRobertTrust = false;
   private static boolean hasPlayedPiano = false;
+  private static boolean isFirstRoom = true;
   private static boolean isWon = false;
   private static boolean isLost = false;
   // Although we currently just store a move count,
@@ -360,7 +361,7 @@ public class Game {
     );
 
     while (!isWon) {
-      if (moveCount == 0) {
+      if (isFirstRoom && moveCount == 0) {
         System.out.println("");
         printer.dialogueln("Your hearing starts to fade along with the rest of your senses.");
         printer.dialogueChain(". . . . . . . .");
@@ -386,6 +387,8 @@ public class Game {
           + "ROBERT: I think we should ... should let him rest for now. We can ... we can discuss this later.\n"
           + "VERONICA: Yes, please - make yourself feel at home."
         );
+
+        isFirstRoom = false;
       }
 
       runRoom(currentRoom);
@@ -481,6 +484,7 @@ public class Game {
     hasPlayedPiano = false;
     moveCount = 0;
     currentRoom = rooms[0];
+    isFirstRoom = true;
     // Move all of the people to random rooms
     shufflePeople();
   }
