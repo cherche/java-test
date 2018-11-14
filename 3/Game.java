@@ -7,10 +7,10 @@ import java.util.*;
  */
 public class Game {
   // Obviously, set DEF_DELAY to 0 if you want to speed things up a bit
-  private static int DEF_DELAY = /*30/*/0/**/;
-  private static int SHORT_DELAY = 100;
-  private static int MEDIUM_DELAY = 150;
-  private static int LONG_DELAY = 200;
+  private static int DEF_DELAY = 10;
+  private static int SHORT_DELAY = 75;
+  private static int MEDIUM_DELAY = 125;
+  private static int LONG_DELAY = 175;
   private static Printer printer = getPrinter(DEF_DELAY, SHORT_DELAY, MEDIUM_DELAY, LONG_DELAY);
   private static boolean isFirstPlay = true;
   private static Room veronicaRoom;
@@ -160,6 +160,8 @@ public class Game {
             + "but you've never seen the faces before. It also has a set of "
             + "all-black clothing."
           );
+          printer.dialogueChain("LUCIA: What are you doing in my room!?");
+          isLost = true;
         }
       })
     }),
@@ -274,16 +276,16 @@ public class Game {
     new Person("Veronica Zaveri", new Action[] {
       new Action("Play Blackjack", new Function() {
         public void run() {
-          if (!hasVeronicaTrust) {
-            hasVeronicaTrust = true;
-            printer.dialogueln("* Gained Veronica's trust *");
-          }
-
           // Just to see whether or not you won the game of Blackjack
           int blackJackStatus = Blackjack.run();
 
           if (blackJackStatus == 1) {
             int index = 0;
+
+            if (!hasVeronicaTrust) {
+              hasVeronicaTrust = true;
+              printer.dialogueln("* Gained Veronica's trust *");
+            }
 
             // Need to make sure Veronica moves to a different room
             // Not to the one she's currently in
@@ -388,7 +390,7 @@ public class Game {
 
       runRoom(currentRoom);
 
-      if (moveCount >= 12) {
+      if (moveCount >= 12 && !isWon) {
         // Just to catch the user's attention
         printer.dialogueChain("\nAs the clock strikes at midnight, you hear screaming from somewhere in the house.");
         printer.dialogueln(
@@ -798,11 +800,6 @@ public class Game {
   // Veronica
   private static class RPS implements Function {
     public void run() {
-      if (!hasVeronicaTrust) {
-        hasVeronicaTrust = true;
-        printer.dialogueln("* Gained Veronica's trust *");
-      }
-
       do {
         System.out.println("");
         String playerChoice = "";
@@ -846,9 +843,14 @@ public class Game {
 
         // Now, just print out the result
         if (playerWins) {
-          printer.dialogueln(playerChoice + " beats " + computerChoice);
+          printer.dialogueln("You win: " + playerChoice + " beats " + computerChoice);
         } else {
-          printer.dialogueln(playerChoice + " loses to " + computerChoice);
+          if (!hasVeronicaTrust) {
+            hasVeronicaTrust = true;
+            printer.dialogueln("* Gained Veronica's trust *");
+          }
+
+          printer.dialogueln("You lose: " + playerChoice + " loses to " + computerChoice);
         }
       } while ('y' == IBIO.inputChar("Do you want to play again? (y/N) "));
     }
