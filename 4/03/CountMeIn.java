@@ -11,7 +11,7 @@ public class CountMeIn extends JPanel implements ActionListener {
 
     JFrame window = new JFrame("Count Me In");
     window.setContentPane(panel);
-    window.setSize(300, 300);
+    window.setSize(300, 450);
     window.setLocation(0, 0);
     window.setVisible(true);
   }
@@ -21,7 +21,7 @@ public class CountMeIn extends JPanel implements ActionListener {
     title.setFont(new Font("Arial", Font.PLAIN, 50));
     this.add(title);
 
-    counter = new JLabel(String.valueOf(num));
+    counter = new JLabel("   " + String.valueOf(num) + "   ");
     counter.setFont(new Font("Arial", Font.PLAIN, 200));
     this.add(counter);
 
@@ -53,10 +53,10 @@ public class CountMeIn extends JPanel implements ActionListener {
 
     if (command.equals("+")) {
       num++;
-      counter.setText(String.valueOf(num));
+      counter.setText("   " + String.valueOf(num) + "   ");
     } else if (command.equals("-")) {
       num--;
-      counter.setText(String.valueOf(num));
+      counter.setText("   " + String.valueOf(num) + "   ");
     }
   }
 }
