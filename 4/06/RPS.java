@@ -97,13 +97,19 @@ public class RPS extends JPanel implements ActionListener {
       computerPicture.setIcon(createImageIcon(choices[computerChoice] + ".png"));
       int result = getResult(userChoice, computerChoice);
 
+      String message = "";
+
       if (result == 1) {
+        message = "You win!";
         wins++;
       } else if (result == -1) {
+        message = "You lose.";
         losses++;
+      } else {
+        message = "It was a tie.";
       }
 
-      status.setText(getMessage(result));
+      status.setText(message);
       scores.setText("wins: " + wins + ", " + "losses: " + losses);
     } else if ("reset".equals(command)) {
       wins = 0;
@@ -115,16 +121,6 @@ public class RPS extends JPanel implements ActionListener {
     } else {
       userPicture.setIcon(createImageIcon(command + ".png"));
       computerPicture.setIcon(null);
-    }
-  }
-
-  private static String getMessage(int result) {
-    if (result == -1) {
-      return "You lose.";
-    } else if (result == 0) {
-      return "It was a tie.";
-    } else {
-      return "You win!";
     }
   }
 
