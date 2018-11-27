@@ -23,6 +23,7 @@ public class RPS extends JPanel implements ActionListener {
     window.setSize(400, 300);
     window.setLocation(100, 100);
     window.setVisible(true);
+    window.setResizable(false);
   }
 
   public RPS() {
@@ -119,6 +120,7 @@ public class RPS extends JPanel implements ActionListener {
       status.setText("");
       scores.setText("");
     } else {
+      status.setText("");
       userPicture.setIcon(createImageIcon(command + ".png"));
       computerPicture.setIcon(null);
     }
