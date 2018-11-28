@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
+/*
+import java.util.*;
+import java.awt.Image;
+import javax.imageio.ImageIO;
+*/
 
 /**
  * Play rock-paper-scissors-lizard-spock with a subjectively pretty GUI
@@ -24,7 +30,8 @@ public class RPSLS extends JPanel implements ActionListener {
   // "spock" beats the two before: "scissors" and "rock"
   ButtonGroup buttonGroup = new ButtonGroup();
   JLabel status = new JLabel();
-  JLabel scores = new JLabel("You: 0; Computer: 0");
+  JLabel userScore = new JLabel("Wins: 0");
+  JLabel computerScore = new JLabel("Losses: 0");
   JLabel userPicture = new JLabel(createImageIcon(choices[0] + ".png"));
   JLabel computerPicture = new JLabel();
   int wins = 0;
@@ -35,13 +42,32 @@ public class RPSLS extends JPanel implements ActionListener {
     JFrame window = new JFrame();
     window.setContentPane(content);
     window.setSize(400, 300);
-    window.setLocation(100, 100);
+    // Centers window
+    window.setLocationRelativeTo(null);
     window.setVisible(true);
     window.setResizable(false);
+    /*
+    String[] paths = new String[] {
+      "icon-16.png",
+      "icon-32.png",
+      "icon-64.png",
+      "icon-128.png",
+      "icon-256.png",
+      "icon-512.png",
+      "icon-1024.png"
+    };
+    ArrayList<Image> icons = new ArrayList<Image>();
+
+    for (int i = 0; i < paths.length; i++) {
+      icons.add(createImage(paths[i]));
+    }
+
+    window.setIconImages(icons);
+    */
   }
 
   public RPSLS() {
-    Color BACK = new Color(40, 40, 40);
+    Color BACK = new Color(36, 36, 36);
     Color TEXT = new Color(179, 179, 179);
     Color BACK_DARKER = new Color(24, 24, 24);
     Color BACK_DARKEST = new Color(18, 18, 18);
@@ -115,8 +141,15 @@ public class RPSLS extends JPanel implements ActionListener {
     reset.setActionCommand("reset");
     reset.addActionListener(this);
     results.add(reset);
-    scores.setForeground(TEXT);
-    scores.setHorizontalAlignment(JLabel.CENTER);
+    JPanel scores = new JPanel();
+    scores.setBackground(BACK_DARKER);
+    scores.setLayout(new GridLayout(1, 2));
+    userScore.setHorizontalAlignment(JLabel.CENTER);
+    userScore.setForeground(TEXT);
+    scores.add(userScore);
+    computerScore.setHorizontalAlignment(JLabel.CENTER);
+    computerScore.setForeground(TEXT);
+    scores.add(computerScore);
     results.add(scores);
     this.add(results);
   }
@@ -146,7 +179,8 @@ public class RPSLS extends JPanel implements ActionListener {
 
       //System.out.println(selected + " vs. " + choices[computerChoice] + " -> " + result);
       status.setText(message);
-      scores.setText("You: " + wins + "; " + "Computer: " + losses);
+      userScore.setText("Wins: " + wins);
+      computerScore.setText("Losses: " + losses);
     } else if ("reset".equals(command)) {
       // Just totally wipe everything
       // No mercy
@@ -155,7 +189,8 @@ public class RPSLS extends JPanel implements ActionListener {
       userPicture.setIcon(createImageIcon(buttonGroup.getSelection().getActionCommand() + ".png"));
       computerPicture.setIcon(null);
       status.setText("");
-      scores.setText("You: 0; Computer: 0");
+      userScore.setText("Wins: 0");
+      computerScore.setText("Losses: 0");
     } else { // Otherwise, we must have pressed a radio button
       // We want to update the screen as different radio buttons are selected
       status.setText("");
@@ -215,7 +250,7 @@ public class RPSLS extends JPanel implements ActionListener {
    * @return the desired ImageIcon object
    */
   protected static ImageIcon createImageIcon(String path) {
-    java.net.URL url = RPSLS.class.getResource(path);
+    URL url = RPSLS.class.getResource(path);
 
     if (url != null) {
       return new ImageIcon(url);
@@ -224,4 +259,17 @@ public class RPSLS extends JPanel implements ActionListener {
       return null;
     }
   }
+
+  /*
+  protected static Image createImage(String path) {
+    URL url = RPSLS.class.getResource(path);
+
+    try {
+      return ImageIO.read(url);
+    } catch (Exception e) {
+      System.out.println("Could not find \"" + path + "\"");
+      return null;
+    }
+  }
+  */
 }
