@@ -167,10 +167,10 @@ public class RPSLS extends JPanel implements ActionListener {
 
       String message = "";
 
-      if (result == 1) {
+      if (result > 0) {
         message = "You win!";
         wins++;
-      } else if (result == -1) {
+      } else if (result < 0) {
         message = "You lose.";
         losses++;
       } else {
@@ -216,15 +216,10 @@ public class RPSLS extends JPanel implements ActionListener {
     int adj1 = choice1 + diff;
     int adj2 = Math.floorMod(choice2 + diff, choices.length);
 
-    // Returns 1 if adj1 > adj2
-    // Returns -1 if adj1 < adj2
-    if (adj1 > adj2) {
-      return 1;
-    } else {
-      return -1;
-    }
-    // That is, 1 represents a win (from perspective of choice1)
-    // -1 represents a loss (from perspective of choice1)
+    // Similar to a Java Comparator
+    return adj1 - adj2;
+    // Is positive if choice1 beats choice2
+    // Is negative if choice1 loses to choice2
   }
 
   /**
